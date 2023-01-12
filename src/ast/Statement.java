@@ -1,14 +1,15 @@
+package ast;
+
 import java.util.Map;
 import java.util.Vector;
 
-public class StmtExprStmt  implements TypedParserObject {
-    
-    StmtExpr StatementExpression;
+public class Statement implements TypedParserObject {
 
-    public StmtExprStmt(StmtExpr StatementExpression) {
-        this.StatementExpression = StatementExpression;
+    String statement;
+
+    public Statement(String statement) {
+        this.statement = statement;
     }
-
 
     @Override
     public void codeGen() {
@@ -21,7 +22,6 @@ public class StmtExprStmt  implements TypedParserObject {
         // TODO Auto-generated method stub
         return null;
     }
-
 
 
 }

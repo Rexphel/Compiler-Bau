@@ -1,3 +1,5 @@
+package ast;
+
 public class Instvar extends Expression {
     
     Expression expression;

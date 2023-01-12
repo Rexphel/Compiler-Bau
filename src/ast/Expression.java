@@ -1,25 +1,26 @@
+package ast;
+
 import java.util.Map;
 import java.util.Vector;
 
-public class Block extends Statement {
-    
-    // TODO: Maybe Statement list/array?
-    Statement statement;
+public class Expression implements TypedParserObject {
 
-    public Block(Statement statement) {
-        super(null);
-        this.statement = statement;
+    Expression expression; // ?
+
+    public Expression(Expression expression) {
+        this.expression = expression;
     }
 
     @Override
     public void codeGen() {
+        
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Class> classes) {
         return null;
     }
-
     
+
 
 }

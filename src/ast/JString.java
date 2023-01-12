@@ -1,3 +1,5 @@
+package ast;
+
 public class JString extends Expression {
     
     String str;

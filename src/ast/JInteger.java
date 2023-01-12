@@ -1,3 +1,5 @@
+package ast;
+
 public class JInteger extends Expression {
     
     Integer i;

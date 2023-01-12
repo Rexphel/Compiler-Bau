@@ -1,3 +1,5 @@
+package ast;
+
 public class LocalVarDecl extends Statement {
     
     Type type;

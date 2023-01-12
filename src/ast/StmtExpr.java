@@ -1,4 +1,5 @@
-import java.lang.Thread.State;
+package ast;
+
 import java.util.Map;
 import java.util.Vector;
 

@@ -1,3 +1,5 @@
+package ast;
+
 public class Binary extends Expression {
 
     String name;

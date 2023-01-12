@@ -1,3 +1,5 @@
+package ast;
+
 public class LocalOrFieldVar extends Expression {
     
     String name;

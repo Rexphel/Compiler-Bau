@@ -1,3 +1,5 @@
+package ast;
+
 public class JChar extends Expression {
     
     char c;

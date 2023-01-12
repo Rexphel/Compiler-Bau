@@ -1,15 +1,14 @@
+package ast;
+
 import java.util.Map;
 import java.util.Vector;
 
-public class Field implements TypedParserObject {
+public class StmtExprStmt  implements TypedParserObject {
     
-    String name;
-    Type type;
+    StmtExpr StatementExpression;
 
-
-    public Field(String name, Type type) {
-        this.name = name;
-        this.type = type;
+    public StmtExprStmt(StmtExpr StatementExpression) {
+        this.StatementExpression = StatementExpression;
     }
 
 
@@ -19,13 +18,12 @@ public class Field implements TypedParserObject {
         
     }
 
-
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Class> classes) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    
+
 
 }
