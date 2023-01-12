@@ -1,0 +1,125 @@
+{-- Definition of global vars
+%{
+    class MiniJavaParser {
+        public static void main(String[] args) {
+            System.out.println("Hello World!");
+        }
+    }
+}%
+
+%token LBRACE
+%token RBRACE
+%token LBRACKET
+%token RBRACKET
+%token NOT
+%token PLUS
+%token MINUS
+%token MULTIPLY
+%token DIVIDE
+%token ASSIGN
+%token EQUAL
+%token NOTEQUAL
+%token GREATER
+%token GREATEREQUAL
+%token LESS
+%token LESSEQUAL
+%token IF
+%token ELSE
+%token WHILE
+%token SEMICOLON
+%token RETURN
+%token BOOLEAN
+%token INT
+%token CHAR
+%token STRING
+%token NULLLITERAL
+%token BOOLLITERAL
+%token INTLITERAL
+%token STRINGLITERAL
+%token CLASS
+%token NEW
+%token SUPER
+%token THIS
+%token VOID
+%token IDENTIFIER
+%token EOF
+%%
+
+statement           : ifthenstatement { }  
+                    | ifthenelsestatement { }
+                    | whilestatement { }
+                    | block { }
+                    | emptystatement { }
+                    | returnstatement { }
+
+expression          : assignment { $$ = $1; }
+
+assignment          : localorfieldref ASSIGN expression { $$ = new Assignment($1, $3); }
+                    
+unary               : 
+
+statements          : statement { }
+                    | statements statement { }
+
+ifthenstatement     : IF LBRACE bexpression  RBRACE  statement { }
+
+ifthenelsestatement : IF LBRACE bexpression  RBRACE statement ELSE statement  { }
+
+whilestatement      : WHILE LBRACE bexpression  RBRACE  statement { }
+
+block               : LBRACKET   RBRACKET { }
+                    | LBRACKET  statements  RBRACKET { }
+
+emptystatement	    : SEMICOLON  { }
+
+returnstatement     : RETURN SEMICOLON  { }
+                    | RETURN expression  SEMICOLON { }
+
+bexpression         : BOOLLITERAL { }  
+
+expression          : INTLITERAL { }
+
+field               : type name SEMICOLON { }
+                    | type name EQUAL expression SEMICOLON { }
+
+localVar            : type name SEMICOLON { }
+                    | type name EQUAL expression SEMICOLON { }
+
+variable            : localVar { }
+                    | field { }
+
+paramenters         : type name { }
+                    | parameters COMMA type name { }
+
+methodHead          : type name LBRACE  RBRACE { }
+                    | type name LBRACE parameters RBRACE { }
+
+methodBody          : LBRACKET RBRACKET { }
+                    | LBRACKET block RBRACKET { }
+
+method              : methodHead methodBody { }
+
+extends             : EXTENDS name { }
+                    | { }
+
+implementations     : implementations name { }
+                    | name { }
+
+implements          : IMPLEMENTS implementations { }
+                    | { }
+
+classHead           : CLASS name { }
+                    | CLASS name extends { }
+                    | CLASS name extends implements { }
+
+class               : CLASS name LBRACE methods RBRACE  { }
+                    | CLASS name LBRACE RBRACE LBRACKET RBRACKET { }
+                    | CLASS name LBRACE RBRACE LREACKET varsAndMethods RBRACKET { }
+
+varsAndMethods      : varsAndMethods variable { }
+                    | varsAndMethods method { }
+                    | variable { }
+                    | method { }
+
+%%
+}
