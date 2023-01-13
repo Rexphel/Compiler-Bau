@@ -52,7 +52,7 @@ ws = [ \t\r\n\b\015]+
 
 "null" {System.out.print(yytext()); return new NULLLITERAL(yytext());}
 true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
-[1-9][0-9]*[IL]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
+[1-9][0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
 \".*\" {System.out.print(yytext()); return new STRINGLITERAL(yytext());}
 
 "class" {System.out.print(yytext()); return new CLASS(yytext());}
