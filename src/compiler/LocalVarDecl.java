@@ -1,3 +1,5 @@
+package compiler;
+
 public class LocalVarDecl extends Statement {
     
     Type type;

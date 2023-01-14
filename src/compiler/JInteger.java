@@ -1,3 +1,5 @@
+package compiler;
+
 public class JInteger extends Expression {
     
     Integer i;

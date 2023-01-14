@@ -1,3 +1,5 @@
+package compiler;
+
 public class Binary extends Expression {
 
     String name;

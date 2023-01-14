@@ -1,3 +1,5 @@
+package compiler;
+
 public class Instvar extends Expression {
     
     Expression expression;

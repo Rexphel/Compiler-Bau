@@ -1,3 +1,5 @@
+package compiler;
+
 public class JNull extends Expression {
     
 

@@ -1,3 +1,5 @@
+package compiler;
+
 public class Bool extends Expression {
     
     boolean bool;

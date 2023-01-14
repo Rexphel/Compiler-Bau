@@ -1,3 +1,5 @@
+package compiler;
+
 public class JString extends Expression {
     
     String str;

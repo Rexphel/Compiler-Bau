@@ -1,9 +1,11 @@
+package compiler;
+
 import java.util.Map;
 import java.util.Vector;
 
 public class Block extends Statement {
     
-    // TODO: Maybe Statement list/array?
+    // TODO: Maybe compiler.Statement list/array?
     Statement statement;
 
     public Block(Statement statement) {
@@ -16,7 +18,7 @@ public class Block extends Statement {
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Class> classes) {
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         return null;
     }
 

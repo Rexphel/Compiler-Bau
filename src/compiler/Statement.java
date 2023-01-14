@@ -1,3 +1,5 @@
+package compiler;
+
 import java.util.Map;
 import java.util.Vector;
 
@@ -16,7 +18,7 @@ public class Statement implements TypedParserObject {
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Class> classes) {
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         // TODO Auto-generated method stub
         return null;
     }

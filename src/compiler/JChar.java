@@ -1,3 +1,5 @@
+package compiler;
+
 public class JChar extends Expression {
     
     char c;

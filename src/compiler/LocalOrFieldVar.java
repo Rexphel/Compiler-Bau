@@ -1,3 +1,5 @@
+package compiler;
+
 public class LocalOrFieldVar extends Expression {
     
     String name;
