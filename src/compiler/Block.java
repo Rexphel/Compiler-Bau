@@ -1,14 +1,16 @@
 package compiler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 public class Block extends Statement {
     
     // TODO: Maybe compiler.Statement list/array?
-    Statement statement;
+    List<Statement> statement;
 
-    public Block(Statement statement) {
+    public Block(List<Statement> statement) {
         super(null);
         this.statement = statement;
     }
@@ -19,8 +21,21 @@ public class Block extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return null;
+        List<Type> types = new ArrayList<>(List.of());
+        statement.forEach(statement1 -> {
+           Type typ1 = statement1.typeCheck(localVars, classes);
+           if(!typ1.type.equals("void")){
+               types.add(typ1);
+           }
+       });
+        if(!types.isEmpty()){
+            return types.get(0); //Todo Obermenge von Typen bilden?
+        }else{
+            return new Type("void");
+        }
+
     }
+
 
     
 

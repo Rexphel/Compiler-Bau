@@ -1,5 +1,10 @@
 package compiler;
 
+import compiler.exception.TypeMismatchException;
+
+import java.util.Map;
+import java.util.Vector;
+
 public class Binary extends Expression {
 
     String name;
@@ -14,5 +19,32 @@ public class Binary extends Expression {
         this.expression2 = expression2;
     }
 
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
 
+        if (
+                expression1.typeCheck(localVars, classes).equals(expression2.typeCheck(localVars, classes))
+        ) {
+            if (name.equals("+") &&
+                    (expression1.typeCheck(localVars, classes).equals(new Type("int")) ||
+                            expression1.typeCheck(localVars, classes).equals(new Type("String")))
+            ) {
+                Type type = expression1.typeCheck(localVars, classes);
+                return type;
+            } else if ("-*%".contains(name) &&
+                    expression1.typeCheck(localVars, classes).equals(new Type("int"))) {
+                Type type = expression1.typeCheck(localVars, classes);
+                return type;
+            } else if (
+                    (name.equals("&&")||name.equals("||")) &&
+                            expression1.typeCheck(localVars, classes).equals(new Type("boolean"))
+            ) {
+                Type type = expression1.typeCheck(localVars, classes);
+                return type;
+            } else {
+                throw new TypeMismatchException("Name does not match or expressions are from wrong Type");
+            }
+        } else {throw new TypeMismatchException("Binary Expression Types does not match");}
+
+    }
 }

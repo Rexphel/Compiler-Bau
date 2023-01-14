@@ -1,5 +1,7 @@
 package compiler;
 
+import compiler.exception.TypeMismatchException;
+
 import java.util.Map;
 import java.util.Vector;
 
@@ -28,8 +30,11 @@ public class Method implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        // TODO Auto-generated method stub
-        return null;
+        if(block.typeCheck(localVars, classes).equals(type)){
+            return type;
+        }else {
+            throw new TypeMismatchException("Blocktype and function type missmatch");
+        }
     }
 
 

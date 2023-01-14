@@ -20,7 +20,7 @@ public class StmtExprStmt  implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        // TODO Auto-generated method stub
+        //  // TODO Typecheck implementieren
         return null;
     }
 

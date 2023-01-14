@@ -1,5 +1,8 @@
 package compiler;
 
+import java.util.Map;
+import java.util.Vector;
+
 public class LocalVarDecl extends Statement {
     
     Type type;
@@ -12,6 +15,8 @@ public class LocalVarDecl extends Statement {
         this.name = name;
     }
 
-    
-
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        return super.typeCheck(localVars, classes);//Todo: Typecheck implementieren
+    }
 }

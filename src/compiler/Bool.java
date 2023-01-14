@@ -1,5 +1,8 @@
 package compiler;
 
+import java.util.Map;
+import java.util.Vector;
+
 public class Bool extends Expression {
     
     boolean bool;
@@ -9,6 +12,9 @@ public class Bool extends Expression {
         super(null);
         this.bool = bool;
     }
-    
 
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        return new Type("boolean");
+    }
 }

@@ -1,5 +1,8 @@
 package compiler;
 
+import java.util.Map;
+import java.util.Vector;
+
 public class JInteger extends Expression {
     
     Integer i;
@@ -10,6 +13,8 @@ public class JInteger extends Expression {
         this.i = i;
     }
 
-    
-
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        return new Type("int");
+    }
 }

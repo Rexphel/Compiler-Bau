@@ -19,7 +19,7 @@ public class Statement implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        // TODO Auto-generated method stub
+        System.out.println("This should not happen. (Tried to typecheck Statement object)");
         return null;
     }
 

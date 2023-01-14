@@ -1,7 +1,10 @@
 package compiler;
 
+import java.util.Map;
+import java.util.Vector;
+
 public class While extends Statement {
-    
+
     Expression expression;
     Statement statement;
 
@@ -12,5 +15,14 @@ public class While extends Statement {
         this.statement = statement;
     }
 
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        if (expression.typeCheck(localVars, classes).equals(new Type("boolean"))) {
+            Type type = statement.typeCheck(localVars, classes);
+            return type;
+        } else {
+            throw new RuntimeException("expression Type does not match boolean");
+        }
 
+    }
 }

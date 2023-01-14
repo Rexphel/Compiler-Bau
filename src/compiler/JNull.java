@@ -1,5 +1,8 @@
 package compiler;
 
+import java.util.Map;
+import java.util.Vector;
+
 public class JNull extends Expression {
     
 
@@ -7,5 +10,8 @@ public class JNull extends Expression {
         super(null);
     }
 
-
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        return  new Type("null");
+    }
 }

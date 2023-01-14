@@ -18,9 +18,7 @@ public class Expression implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        System.out.println("This should not happen. (Tried to typecheck Expression object)");
         return null;
     }
-    
-
-
 }

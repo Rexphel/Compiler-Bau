@@ -1,5 +1,10 @@
 package compiler;
 
+import compiler.exception.TypeMismatchException;
+
+import java.util.Map;
+import java.util.Vector;
+
 public class Unary extends Expression {
     
     String name;
@@ -12,5 +17,16 @@ public class Unary extends Expression {
         this.expression = expression;
     }
 
-
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        if(expression.typeCheck(localVars,classes).equals(new Type("int"))
+        && "+*".contains(name)){
+            return expression.typeCheck(localVars, classes);
+        } else if (name.equals("!")
+                && expression.typeCheck(localVars, classes).equals("boolean")) {
+            return expression.typeCheck(localVars, classes);
+        } else {
+            throw new TypeMismatchException("Expression Type does not match name Type");
+        }
+    }
 }

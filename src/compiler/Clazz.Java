@@ -9,5 +9,4 @@ public class Clazz {
     public Clazz() {
         
     }
-
 }
