@@ -1,9 +1,14 @@
 package compiler;
 
+import compiler.exception.TypeMismatchException;
+
+import java.util.Map;
+import java.util.Vector;
+
 public class If extends Statement {
 
     Expression condition;
-    Statement statement;
+    Statement statement; // IF
     Statement maybeStatement; // Nich in UML
 
     public If(Expression condition, Statement statement, Statement mayStatement) {
@@ -13,5 +18,14 @@ public class If extends Statement {
         this.maybeStatement = mayStatement;
     }
 
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+        if (condition.typeCheck(localVars, classes).equals(new Type("boolean"))
+                && statement.typeCheck(localVars, classes).equals(maybeStatement.typeCheck(localVars, classes))) {
+            return statement.typeCheck(localVars, classes);
+        } else {
+            throw new TypeMismatchException("If Statement types do not match");
+        }
+    }
 
 }
