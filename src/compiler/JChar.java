@@ -15,6 +15,6 @@ public class JChar extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return new Type("char");
+        return Type.CHAR;
     }
 }

@@ -12,6 +12,6 @@ public class JNull extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return  new Type("null");
+        return Type.NULL;
     }
 }

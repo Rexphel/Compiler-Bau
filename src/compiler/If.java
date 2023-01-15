@@ -20,7 +20,7 @@ public class If extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        if (condition.typeCheck(localVars, classes).equals(new Type("boolean"))
+        if (condition.typeCheck(localVars, classes).equals(Type.BOOLEAN)
                 && statement.typeCheck(localVars, classes).equals(maybeStatement.typeCheck(localVars, classes))) {
             return statement.typeCheck(localVars, classes);
         } else {

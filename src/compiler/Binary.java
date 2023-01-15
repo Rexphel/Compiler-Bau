@@ -26,18 +26,18 @@ public class Binary extends Expression {
                 expression1.typeCheck(localVars, classes).equals(expression2.typeCheck(localVars, classes))
         ) {
             if (name.equals("+") &&
-                    (expression1.typeCheck(localVars, classes).equals(new Type("int")) ||
-                            expression1.typeCheck(localVars, classes).equals(new Type("String")))
+                    (expression1.typeCheck(localVars, classes).equals(Type.INTEGER) ||
+                            expression1.typeCheck(localVars, classes).equals(Type.STRING))
             ) {
                 Type type = expression1.typeCheck(localVars, classes);
                 return type;
             } else if ("-*%".contains(name) &&
-                    expression1.typeCheck(localVars, classes).equals(new Type("int"))) {
+                    expression1.typeCheck(localVars, classes).equals(Type.INTEGER)) {
                 Type type = expression1.typeCheck(localVars, classes);
                 return type;
             } else if (
                     (name.equals("&&")||name.equals("||")) &&
-                            expression1.typeCheck(localVars, classes).equals(new Type("boolean"))
+                            expression1.typeCheck(localVars, classes).equals(Type.BOOLEAN)
             ) {
                 Type type = expression1.typeCheck(localVars, classes);
                 return type;

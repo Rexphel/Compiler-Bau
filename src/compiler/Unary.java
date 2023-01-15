@@ -19,11 +19,11 @@ public class Unary extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        if(expression.typeCheck(localVars,classes).equals(new Type("int"))
+        if(expression.typeCheck(localVars,classes).equals(Type.INTEGER)
         && "+*".contains(name)){
             return expression.typeCheck(localVars, classes);
         } else if (name.equals("!")
-                && expression.typeCheck(localVars, classes).equals("boolean")) {
+                && expression.typeCheck(localVars, classes).equals(Type.BOOLEAN)) {
             return expression.typeCheck(localVars, classes);
         } else {
             throw new TypeMismatchException("Expression Type does not match name Type");

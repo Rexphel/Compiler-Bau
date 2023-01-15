@@ -3,8 +3,15 @@ package compiler;
 import java.util.Objects;
 
 public class Type {
-    
-    String type;
+
+    public static Type BOOLEAN = new Type("boolean");
+    public static Type INTEGER = new Type("int");
+    public static Type STRING = new Type("string");
+    public static Type VOID = new Type("void");
+    public static Type NULL = new Type("null");
+    public static Type CHAR = new Type("char");
+
+    final String type;
 
     public Type(String type) {
         this.type = type;
