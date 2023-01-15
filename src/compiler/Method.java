@@ -33,7 +33,7 @@ public class Method implements TypedParserObject {
             return type;
         }else {
             throw new TypeMismatchException("Blocktype and function type missmatch");
-        }
+        }//Todo delete local variables from Map
     }
 
 

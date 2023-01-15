@@ -16,6 +16,8 @@ public class LocalVarDecl extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return super.typeCheck(localVars, classes);//Todo: Typecheck implementieren
+        localVars.put(name,type);
+        return type;
     }
+
 }

@@ -30,7 +30,7 @@ public class Block extends Statement {
            }
        });
         if(!types.isEmpty()){
-            return types.get(0); //Todo Obermenge von Typen bilden?
+            return types.get(0); //Todo Obermenge von Typen bilden? Prof fragen
         }else{
             return Type.VOID;
         }

@@ -5,10 +5,10 @@ import java.util.Vector;
 
 public class StmtExprStmt  implements TypedParserObject {
     
-    StmtExpr StatementExpression;
+    StmtExpr statementExpression;
 
     public StmtExprStmt(StmtExpr StatementExpression) {
-        this.StatementExpression = StatementExpression;
+        this.statementExpression = StatementExpression;
     }
 
 
@@ -20,8 +20,7 @@ public class StmtExprStmt  implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        //  // TODO Typecheck implementieren
-        return null;
+        return new Type("void");
     }
 
 

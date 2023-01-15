@@ -24,7 +24,7 @@ public class StmtExpr implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-
+        System.out.println("This should not happen. (Tried to typecheck StmtExp object)");
         return null;
     }
 

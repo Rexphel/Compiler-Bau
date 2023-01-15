@@ -1,7 +1,9 @@
 package compiler;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class LocalOrFieldVar extends Expression {
     
@@ -14,6 +16,11 @@ public class LocalOrFieldVar extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return super.typeCheck(localVars, classes);//Todo: Typecheck implementieren
+        Set<Map.Entry<String,Type>> set = localVars.entrySet().stream().filter(stringTypeEntry -> stringTypeEntry.getKey().equals(name)).collect(Collectors.toSet());
+        if(set.isEmpty()){
+            throw new RuntimeException("no Variable found") ;
+        } else {
+            return localVars.get(name);
+        }
     }
 }

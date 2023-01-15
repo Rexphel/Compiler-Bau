@@ -12,6 +12,6 @@ public class Super extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return super.typeCheck(localVars, classes); //Todo: Typecheck implementieren
+        return new Type("void"); //Todo implementieren? kein plan was hier machen
     }
 }
