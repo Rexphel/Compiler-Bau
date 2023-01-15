@@ -27,7 +27,6 @@ public class Method implements TypedParserObject {
         
     }
 
-
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         if(block.typeCheck(localVars, classes).equals(type)){
