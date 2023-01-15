@@ -1,5 +1,6 @@
 package compiler;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -24,6 +25,11 @@ public class MethodCall extends StmtExpr {
         if (clazzList.isEmpty()) {
             throw new RuntimeException("No Class found in MethodCall!");
         }
-        return clazzList.get(0).name;
+        var clazz = clazzList.get(0);
+        return Arrays.stream(clazz.methodDecl)
+                .filter(method -> method.name.equals(methodName))
+                .map(method -> method.type)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No Method found to call!"));
     }
 }
