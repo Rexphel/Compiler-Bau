@@ -1,6 +1,6 @@
 {-- Definition of global vars
 %{
-    class MiniJavaParser {
+    Class MiniJavaParser {
         public static void main(String[] args) {
             System.out.println("Hello World!");
         }
@@ -43,83 +43,120 @@
 %token VOID
 %token IDENTIFIER
 %token EOF
+
+%type <If> Ifthenstatement
+%type <??> Ifthenelsestatement
+%type <While> Whilestatement
+%type <Block> Block
+%type <LocalVarDecl> Localvardecleration
+%type <Return> Returnstatement
+
+%type <Assign> Assignment
+%type <New> Newstmtexpr
+%type <Methodcall> Methodcall
+%type <Unary> Unary
+%type <List<Statement>> Statements
 %%
 
-statement           : ifthenstatement { }  
-                    | ifthenelsestatement { }
-                    | whilestatement { }
-                    | block { }
-                    | emptystatement { }
-                    | returnstatement { }
 
-expression          : assignment { $$ = $1; }
+Block               : LBRACKET   RBRACKET { }
+                    | LBRACKET  Statements  RBRACKET { $$ = new Block($2); }
 
-assignment          : localorfieldref ASSIGN expression { $$ = new Assignment($1, $3); }
+Statements          : Statements Statement {
+                        $1.add($2);
+                        $$ = $1;
+                    }
+                    | Statement { 
+                        $$ = new ArrayList<Statements>();
+                        $$.add($1); 
+                    }
+
+Statement           : Ifthenstatement { }  
+                    | Ifthenelsestatement { }
+                    | Whilestatement { }
+                    | Block { }
+                    | Localvardecleration { }
+                    | Returnstatement { }
+                    | Emptystatement { }
+                    | Stmtexprstmt { }
+
+Stmtexprstmt        : Stmtexpr { $$ = $1 } // Instanz von StmtExprStmt benötigt??
+
+Stmtexprexpr        : Stmtexpr { $$ = $1 } // Instanz von StmtExprExpr benötigt??
+
+Stmtexpr            : Assignment { $$ = $1 }
+                    | Newstmtexpr { $$ = $1 }
+                    | Methodcall { $$ = $1 }
+
+Assignment          : localorfieldref ASSIGN Expression { $$ = new Assign($1, $3); }
                     
-unary               : 
+Newstmtexpr          : NEW ???               // Konstruktor wo??
 
-statements          : statement { }
-                    | statements statement { }
+Methodcall          : Variable DOT name LBRACE Variables RBRACE { }
 
-ifthenstatement     : IF LBRACE bexpression  RBRACE  statement { }
+Unary               : 
 
-ifthenelsestatement : IF LBRACE bexpression  RBRACE statement ELSE statement  { }
+Ifthenstatement     : IF LBRACE Bexpression  RBRACE  Statement { }
 
-whilestatement      : WHILE LBRACE bexpression  RBRACE  statement { }
+Ifthenelsestatement : IF LBRACE Bexpression  RBRACE Statement ELSE Statement  { }
 
-block               : LBRACKET   RBRACKET { }
-                    | LBRACKET  statements  RBRACKET { }
+Whilestatement      : WHILE LBRACE Bexpression  RBRACE  Statement { }
 
-emptystatement	    : SEMICOLON  { }
+Localvardecleration : 
 
-returnstatement     : RETURN SEMICOLON  { }
-                    | RETURN expression  SEMICOLON { }
+Emptystatement	    : SEMICOLON  { }
 
-bexpression         : BOOLLITERAL { }  
+Returnstatement     : RETURN SEMICOLON  { }
+                    | RETURN Expression  SEMICOLON { }
 
-expression          : INTLITERAL { }
+Bexpression         : BOOLLITERAL { }  
 
-field               : type name SEMICOLON { }
-                    | type name EQUAL expression SEMICOLON { }
+Expression          : INTLITERAL { }
+                    | Assignment { $$ = $1; }
 
-localVar            : type name SEMICOLON { }
-                    | type name EQUAL expression SEMICOLON { }
+Field               : type name SEMICOLON { }
+                    | type name EQUAL Expression SEMICOLON { }
 
-variable            : localVar { }
-                    | field { }
+LocalVar            : type name SEMICOLON { }
+                    | type name EQUAL Expression SEMICOLON { }
 
-paramenters         : type name { }
-                    | parameters COMMA type name { }
+Variable            : LocalVar { }
+                    | Field { }
 
-methodHead          : type name LBRACE  RBRACE { }
-                    | type name LBRACE parameters RBRACE { }
+Variables           : Variable { }
+                    | Variables Variable { }
 
-methodBody          : LBRACKET RBRACKET { }
-                    | LBRACKET block RBRACKET { }
+Parameters          : type name { }
+                    | Parameters COMMA type name { }
 
-method              : methodHead methodBody { }
+MethodHead          : type name LBRACE  RBRACE { }
+                    | type name LBRACE Parameters RBRACE { }
 
-extends             : EXTENDS name { }
+MethodBody          : LBRACKET RBRACKET { }
+                    | LBRACKET Block RBRACKET { }
+
+Method              : MethodHead MethodBody { }
+
+Extends             : EXTENDS name { }
                     | { }
 
-implementations     : implementations name { }
+Implementations     : Implementations name { }
                     | name { }
 
-implements          : IMPLEMENTS implementations { }
+Implements          : IMPLEMENTS Implementations { }
                     | { }
 
-classHead           : CLASS name { }
-                    | CLASS name extends { }
-                    | CLASS name extends implements { }
+ClassHead           : CLASS name { }
+                    | CLASS name Extends { }
+                    | CLASS name Extends Implements { }
 
-class               : CLASS name LBRACE methods RBRACE  { }
+Class               : CLASS name LBRACE methods RBRACE  { }
                     | CLASS name LBRACE RBRACE LBRACKET RBRACKET { }
-                    | CLASS name LBRACE RBRACE LREACKET varsAndMethods RBRACKET { }
+                    | CLASS name LBRACE RBRACE LREACKET VarsAndMethods RBRACKET { }
 
-varsAndMethods      : varsAndMethods variable { }
-                    | varsAndMethods method { }
-                    | variable { }
-                    | method { }
-
+VarsAndMethods      : VarsAndMethods Variable { }
+                    | VarsAndMethods Method { }
+                    | Variable { }
+                    | Method { }
 %%
 }
