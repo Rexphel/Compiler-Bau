@@ -26,7 +26,10 @@ public class Instvar extends Expression {
                 Field[] fields = foundClass.get().fieldDecl;
                 List<Field> namedField = Arrays.stream(fields).filter(field -> field.name.equals(name)).toList();
                 boolean isNameFound = !namedField.isEmpty();
-                if(isNameFound) return namedField.get(0).type; else {
+                if(isNameFound) {
+                    type = namedField.get(0).type;
+                    return type;
+                } else {
                     throw new RuntimeException("Field "+name+" not found.");
                 }
             }else{

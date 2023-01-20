@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class Type {
 
-    public static Type BOOLEAN = new Type("boolean");
-    public static Type INTEGER = new Type("int");
-    public static Type STRING = new Type("String");
-    public static Type VOID = new Type("void");
-    public static Type NULL = new Type("null");
-    public static Type CHAR = new Type("char");
+    public static final Type BOOLEAN = new Type("boolean");
+    public static final Type INTEGER = new Type("int");
+    public static final Type STRING = new Type("String");
+    public static final Type VOID = new Type("void");
+    public static final Type NULL = new Type("null");
+    public static final Type CHAR = new Type("char");
 
     final String type;
 

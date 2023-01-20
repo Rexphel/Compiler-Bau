@@ -22,8 +22,11 @@ public class New extends StmtExpr {
         }
 
         if (super.expression == null) {
-            return Type.VOID;
-        } else
-            return super.expression.typeCheck(localVars, classes);
+            type = Type.VOID;
+            return type;
+        } else {
+            type = super.expression.typeCheck(localVars, classes);
+            return type;
+        }
     }
 }

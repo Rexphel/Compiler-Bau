@@ -14,6 +14,7 @@ public class StmtExprExpr extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return stmtExpr.typeCheck(localVars, classes);
+        type = stmtExpr.typeCheck(localVars, classes);
+        return type;
     }
 }

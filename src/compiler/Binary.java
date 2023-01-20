@@ -29,17 +29,17 @@ public class Binary extends Expression {
                     (expression1.typeCheck(localVars, classes).equals(Type.INTEGER) ||
                             expression1.typeCheck(localVars, classes).equals(Type.STRING))
             ) {
-                Type type = expression1.typeCheck(localVars, classes);
+                type = expression1.typeCheck(localVars, classes);
                 return type;
             } else if ("-*%".contains(name) &&
                     expression1.typeCheck(localVars, classes).equals(Type.INTEGER)) {
-                Type type = expression1.typeCheck(localVars, classes);
+                type = expression1.typeCheck(localVars, classes);
                 return type;
             } else if (
                     (name.equals("&&")||name.equals("||")) &&
                             expression1.typeCheck(localVars, classes).equals(Type.BOOLEAN)
             ) {
-                Type type = expression1.typeCheck(localVars, classes);
+                type = expression1.typeCheck(localVars, classes);
                 return type;
             } else {
                 throw new TypeMismatchException("Name does not match or expressions are from wrong Type");

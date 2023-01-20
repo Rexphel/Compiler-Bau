@@ -26,6 +26,7 @@ public class Clazz extends Statement{
         for (var methode : methodDecl){
             methode.typeCheck(localVars, classes);
         }
-        return new Type("void");
+        type = Type.VOID;
+        return type;
     }
 }

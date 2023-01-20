@@ -6,6 +6,7 @@ import java.util.Vector;
 public class Statement implements TypedParserObject {
 
     String statement;
+    Type type;
 
     public Statement(String statement) {
         this.statement = statement;
