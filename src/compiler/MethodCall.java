@@ -21,6 +21,7 @@ public class MethodCall extends StmtExpr {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         // TODO: Put Parameters in localVars
+        parameterList.forEach(x -> localVars.put("ABC" /*TODO NAME*/, x.type));
         var typeOfExpression = localVars.get(methodName);
         var clazzList = classes.stream().filter(clazz -> clazz.name.equals(typeOfExpression)).toList();
         if (clazzList.isEmpty()) {

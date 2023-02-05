@@ -12,7 +12,8 @@ public class This extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        type = classes.get(0).typeCheck(localVars, classes);
+//        type = classes.get(0).typeCheck(localVars, classes);
+        type = classes.firstElement().type;
         return type;
     }
 }

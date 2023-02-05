@@ -9,7 +9,7 @@ public class If extends Statement {
 
     Expression condition;
     Statement statement; // IF
-    Statement maybeStatement; // Nich in UML
+    Statement maybeStatement; // Nicht in UML
 
     public If(Expression condition, Statement statement, Statement mayStatement) {
         super(null);

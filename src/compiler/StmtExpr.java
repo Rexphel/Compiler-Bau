@@ -7,7 +7,7 @@ public class StmtExpr implements TypedParserObject {
     
     Expression expression;
     Statement statement;
-    // ToDO: Typ?
+    Type type;
 
     public StmtExpr(Expression expression, Statement statement) {
         this.expression = expression;
