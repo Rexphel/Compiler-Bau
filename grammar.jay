@@ -1,6 +1,6 @@
 {-- Definition of global vars
 %{
-    class MiniJavaParser {
+    Class MiniJavaParser {
         public static void main(String[] args) {
             System.out.println("Hello World!");
         }
@@ -43,7 +43,23 @@
 %token VOID
 %token IDENTIFIER
 %token EOF
+
+%type <If> Ifthenstatement
+%type <??> Ifthenelsestatement
+%type <While> Whilestatement
+%type <Block> Block
+%type <LocalVarDecl> Localvardecleration
+%type <Return> Returnstatement
+
+%type <Assign> Assignment
+%type <New> Newstmtexpr
+%type <Methodcall> Methodcall
+%type <Unary> Unary
+%type <List<Statement>> Statements
 %%
+
+block               : LBRACKET   RBRACKET { $$ = new Block(new ArrayList<Statement>())}
+                    | LBRACKET  statements  RBRACKET { $$ = new Block($2); }
 
 statement           : ifthenstatement {$$ = $1;}  
                     | ifthenelsestatement {$$ = $1;}
@@ -124,15 +140,13 @@ ifthenelsestatement : IF LBRACKET bexpression  RBRACKET statement ELSE statement
 
 whilestatement      : WHILE LBRACKET bexpression  RBRACKET  statement {$$ = new While($3, $5);}
 
-block               : LBRACE   RBRACE {$$ = new Block(Optional.empty());}
-                    | LBRACE  statements  RBRACE {$$ = new Block(Optional.of($2));}
+whilestatement      : WHILE LBRACE bexpression  RBRACE  statement { }
 
-emptystatement	    : SEMICOLON  { }
+block               : LBRACKET   RBRACKET { }
+                    | LBRACKET  statements  RBRACKET { }
 
-returnstatement     : RETURN SEMICOLON  {$$ = new Return(Optionl.empty());}
-                    | RETURN expression  SEMICOLON {$$ = new Return(Optional.of($2));5}
-
-bexpression         : BOOLLITERAL { }  
+Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null) }
+                    | RETURN Expression  SEMICOLON { $$ = new Return($2)}
 
 variable            : type name SEMICOLON { }
                     | type name EQUAL expression SEMICOLON { }
@@ -152,7 +166,7 @@ paramenters         : parameters COMMA type name {
 method              : type name LBRACE parameters RBRACE block { 
 						$$ = new Method($2, $1, $4, $6);
 					}
-
+					
 // ToDo: Does Clazz class need the whole statement string?
 class               : CLASS name LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new Field[]{}, new Method[]{}); }
                     | CLASS name LREACKET varsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
