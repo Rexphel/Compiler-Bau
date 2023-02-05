@@ -51,27 +51,29 @@ statement           : ifthenstatement {$$ = $1;}
                     | block {$$ = $1;}
                     | emptystatement {$$ = $1;}
                     | returnstatement {$$ = $1;}
+					| stmtexprstmt {$$ = $1}
 
 expression          : SUPER {$$ = new Super($1);}
 					| localorfieldvar {$$ = $1;}
 					| instvar {$$ = $1;}
 					| unary {$$ = $1;}
 					| binary {$$ = $1;}
-					| INTLITERAL {$$ = new Integer($1);}
-					| BOOLLITERAL {$$ = new Boolean($1);}
-					| CHARLITERAL {$$ = new Char($1);} //ToDo: Do we need a CHARLITERAL?
-					| STRINGLITERAL {$$ = new String($1);}
-					| JNULL {$$ = new JNull($1);}
+					| INTLITERAL {$$ = new JInteger($1);}
+					| BOOLLITERAL {$$ = new JBoolean($1);}
+					| CHARLITERAL {$$ = new JChar($1);}
+					| STRINGLITERAL {$$ = new JString($1);} // ToDo: JString otr String?
+					| NULLLITERAL {$$ = new JNull($1);}
 					| stmtexprexpr
 
 stmtexpr			: assignment {$$ = $1;}
 					| new {$$ = $1;}
 					| methodcall {$$ = $1;}
+					
 
 
 localorfieldvar		: IDENTIFIER {$$ = new LocalOrFieldVar($1);}
 
-instvar				: localorfieldvar POINT IDENTIFIER {$$ = new InstVar($1, $3);} //ToDo: missing "." as token?
+instvar				: localorfieldvar POINT IDENTIFIER {$$ = new InstVar($1, $3);}
 
 unary				: unaryoperator expression {$$ = new Unary($1, $2);}
 
@@ -92,7 +94,9 @@ binaryoperator		: PLUS {$$ = $1;}
 					| LESS {$$ = $1;}
 					| LESSEQUAL {$$ = $1;}
 
-stmtexprexpr		: //ToDo: missing "." as token?
+stmtexprexpr		: stmtexpr {new StmtExprExpr($1);}
+
+stmtexprstmt		: stmtexpr SEMICOLON {new StmtExprStmt($1);}
 
 assignment          : localorfieldvar ASSIGN expression { $$ = new Assignment($1, $3); }
 
@@ -103,17 +107,10 @@ expressions			: expression {
 						exprList.add($1);
 						$$ = exprList;
 					  }
-					| expressions expression {$1.add($2); $$ = $1;}
+					| expressions COMMA expression {$1.add($2); $$ = $1;}
 
 methodcall			: IDENTIFIER LBRACKET expressions RBRACKET {$$ = new MethodCall(Optional.empty(), $1, $3);}
-					| //ToDo: apparently MethodCall can also be called with an expression as parameter? localorfieldvar ASSIGN IDENTIFIER LBRACKET expressions RBRACKET {$$ = new MethodCall()}
                     
-
-
-
-
-
-
 statements          : statement {
 						ArrayList<Statement> stmtList = new ArrayList<>(); 
 	      		  		stmtList.add($1);
@@ -127,64 +124,58 @@ ifthenelsestatement : IF LBRACKET bexpression  RBRACKET statement ELSE statement
 
 whilestatement      : WHILE LBRACKET bexpression  RBRACKET  statement {$$ = new While($3, $5);}
 
-block               : LBRACE   RBRACE {$$ = new Block(Optional.empty())}
-                    | LBRACE  statements  RBRACE {$$ = new Block(Optional.of($2))}
+block               : LBRACE   RBRACE {$$ = new Block(Optional.empty());}
+                    | LBRACE  statements  RBRACE {$$ = new Block(Optional.of($2));}
 
 emptystatement	    : SEMICOLON  { }
 
-returnstatement     : RETURN SEMICOLON  {$$ = new Return(Optionl.empty())}
-                    | RETURN expression  SEMICOLON {$$ = new Return(Optional.of($2))}
-
-
-
-
-
-
-
+returnstatement     : RETURN SEMICOLON  {$$ = new Return(Optionl.empty());}
+                    | RETURN expression  SEMICOLON {$$ = new Return(Optional.of($2));5}
 
 bexpression         : BOOLLITERAL { }  
 
-field               : type name SEMICOLON { }
+variable            : type name SEMICOLON { }
                     | type name EQUAL expression SEMICOLON { }
 
-localVar            : type name SEMICOLON { }
-                    | type name EQUAL expression SEMICOLON { }
+paramenters         : parameters COMMA type name { 
+						paramMap = new HashMap<String, Type>();
+						paramMap.putAll($1);
+						paramMap.put($4, $3);
+						$$ = paramMap;
+					}
+                    | type name { 
+						paramMap = new HashMap<String, Type>();
+						paramMap.put($2, $1);
+						$$ = paramMap;
+					}
 
-variable            : localVar { }
-                    | field { }
+method              : type name LBRACE parameters RBRACE block { 
+						$$ = new Method($2, $1, $4, $6);
+					}
 
-paramenters         : type name { }
-                    | parameters COMMA type name { }
+// ToDo: Does Clazz class need the whole statement string?
+class               : CLASS name LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new Field[]{}, new Method[]{}); }
+                    | CLASS name LREACKET varsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
-methodHead          : type name LBRACE  RBRACE { }
-                    | type name LBRACE parameters RBRACE { }
-
-methodBody          : LBRACKET RBRACKET { }
-                    | LBRACKET block RBRACKET { }
-
-method              : methodHead methodBody { }
-
-extends             : EXTENDS name { }
-                    | { }
-
-implementations     : implementations name { }
-                    | name { }
-
-implements          : IMPLEMENTS implementations { }
-                    | { }
-
-classHead           : CLASS name { }
-                    | CLASS name extends { }
-                    | CLASS name extends implements { }
-
-class               : CLASS name LBRACE methods RBRACE  { }
-                    | CLASS name LBRACE RBRACE LBRACKET RBRACKET { }
-                    | CLASS name LBRACE RBRACE LREACKET varsAndMethods RBRACKET { }
-
-varsAndMethods      : varsAndMethods variable { }
-                    | varsAndMethods method { }
-                    | variable { }
-                    | method { }
-
+varsAndMethods      : varsAndMethods variable { 
+						$$ = new Clazz(
+							"", new Type(""), 
+							new ArrayList<>($1.fieldDecl).add($2).toArray(new Field[$1.fieldDecl.length +1]),
+							$1.methodDecl
+						);
+					}
+                    | varsAndMethods method { 
+						$$ = new Clazz(
+							"", new Type(""), 
+							$1.fieldDecl ,
+							new ArrayList<>($1.methodDecl).add($2).toArray(new Field[$1.methodDecl.length +1])
+						);
+					}
+                    | variable { 
+						$$ = new Clazz("", new Type(""), new Field[]{$1}, new Method[]{});
+					}
+                    | method { 
+						$$ = new Clazz("", new Type(""), new Field[]{}, new Method[]{$1});
+					}
 %%
 }
