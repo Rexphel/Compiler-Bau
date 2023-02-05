@@ -9,7 +9,7 @@ public class Assign extends StmtExpr {
     Expression expression;
 
     public Assign(String varName, Expression expression) {
-        super(null, null);
+        super((Expression) null);
         this.varName = varName;
         this.expression = expression;
     }

@@ -10,7 +10,7 @@ public class New extends StmtExpr {
     List<Expression> expressionList;
 
     public New(Type type, List<Expression> expressionList) {
-        super(null, null);
+        super((Expression) null);
         this.type = type;
         this.expressionList = expressionList;
     }

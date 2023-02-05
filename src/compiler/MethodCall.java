@@ -12,7 +12,7 @@ public class MethodCall extends StmtExpr {
     List<Expression> parameterList;
 
     public MethodCall(Expression expression, String methodName, List<Expression> parameterList) {
-        super(null, null);
+        super((Expression) null);
         this.expression = expression;
         this.methodName = methodName;
         this.parameterList = parameterList;
