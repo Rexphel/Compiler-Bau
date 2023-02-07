@@ -1,5 +1,7 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
 public class LocalVarDecl extends Statement {
@@ -13,7 +15,7 @@ public class LocalVarDecl extends Statement {
     }
 
     @Override
-    public void codeGen() {
+    public void codeGen(MethodVisitor method) {
 
     }
 

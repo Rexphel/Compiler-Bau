@@ -1,5 +1,7 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
 public class StmtExprExpr extends Expression {
@@ -11,8 +13,8 @@ public class StmtExprExpr extends Expression {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        stmtExpr.codeGen(method);
     }
 
     @Override

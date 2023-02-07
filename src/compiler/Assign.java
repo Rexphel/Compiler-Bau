@@ -8,14 +8,13 @@ public class Assign extends StmtExpr {
     Expression expression;
 
     public Assign(String varName, Expression expression) {
-        super((Expression) null);
         this.varName = varName;
         this.expression = expression;
     }
 
     @Override
     public void codeGen() {
-
+        //either way a PutField on this or a VarInsn(xSTORE)
     }
 
     @Override

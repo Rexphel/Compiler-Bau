@@ -1,5 +1,8 @@
 package compiler;
 
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
 public class While extends Statement {
@@ -14,8 +17,9 @@ public class While extends Statement {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        Label startLabel = new Label();
+        // expression has to load true/false with that we can jump or not by comparing the result to true
     }
 
     @Override

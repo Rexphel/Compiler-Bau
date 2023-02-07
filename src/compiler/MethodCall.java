@@ -5,13 +5,10 @@ import java.util.Map;
 
 public class MethodCall extends StmtExpr {
 
-    Expression expression;
     String methodName;
     List<Expression> parameterList;
 
-    public MethodCall(Expression expression, String methodName, List<Expression> parameterList) {
-        super((Expression) null);
-        this.expression = expression;
+    public MethodCall( String methodName, List<Expression> parameterList) {
         this.methodName = methodName;
         this.parameterList = parameterList;
     }
@@ -23,7 +20,6 @@ public class MethodCall extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        // TODO: Put Parameters in localVars
         parameterList.forEach(x -> localVars.put("ABC" /*TODO NAME*/, x.type));
 
         return clazz.methodDecl.stream()

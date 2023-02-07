@@ -1,11 +1,16 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
 public class Super extends Expression {
 
+    // TODO: hiermit sollte in unserem Fall ausschließlich auf Object zugegriffen werde, da weitere Vererbung nicht implementiert wird.
+
     @Override
-    public void codeGen() {
+    public void codeGen(MethodVisitor method) {
+        //aload java/lang/Object
 
     }
 

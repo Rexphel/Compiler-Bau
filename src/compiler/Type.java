@@ -32,4 +32,14 @@ public class Type {
                 '}';
     }
 
+    public String getTypeLiteral(){
+        return switch (type) {
+            case "boolean" -> "Z";
+            case "int" -> "I";
+            case "String" -> "Ljava/lang/String;"; //this is an Object...
+            case "char" -> "C";
+            default -> "V";
+        };
+    }
+
 }

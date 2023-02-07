@@ -1,6 +1,7 @@
 package compiler;
 
 import compiler.exception.TypeMismatchException;
+import org.objectweb.asm.MethodVisitor;
 
 import java.util.Map;
 
@@ -16,8 +17,9 @@ public class Unary extends Expression {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        expression.codeGen(method);
+        //unary operation
     }
 
     @Override

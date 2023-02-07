@@ -5,11 +5,11 @@ import java.util.Map;
 
 public class New extends StmtExpr {
 
+    //Is this even needed?
     Type type;
     List<Expression> expressionList;
 
     public New(Type type, List<Expression> expressionList) {
-        super((Expression) null);
         this.type = type;
         this.expressionList = expressionList;
     }
@@ -21,6 +21,7 @@ public class New extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        //TODO: where does the expressionList come from?
         if (super.expression != null && super.statement != null) {
             throw new RuntimeException("StmtExpr is both a statement and an expression!");
         }

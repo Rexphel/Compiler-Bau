@@ -1,12 +1,12 @@
 package codegen;
 
-import ast.clazz;
+import compiler.*;
 
 public class AsmCodeGenerator implements CodeGenerator {
 
-  private final clazz clazz;
+  private final Clazz clazz;
 
-  public AsmCodeGenerator(final ast.clazz clazz) {
+  public AsmCodeGenerator(final Clazz clazz) {
     this.clazz = clazz;
   }
 

@@ -1,18 +1,11 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 public abstract class StmtExpr implements TypedParserObject {
 
-    Expression expression;
-    Statement statement;
     Type type;
 
-    // TODO: Constructor(s) HERE needed?
-    public StmtExpr(Expression expression) {
-        this.expression = expression;
-    }
 
-    public StmtExpr(Statement statement) {
-        this.statement = statement;
-    }
-
+    public abstract void codeGen(MethodVisitor method);
 }

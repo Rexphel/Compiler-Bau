@@ -1,5 +1,8 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +18,8 @@ public class Instvar extends Expression {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        //TODO: we probably only call an Instvar with "this", then it is gonna be a GETFIELD instruction (insn)
     }
 
     @Override

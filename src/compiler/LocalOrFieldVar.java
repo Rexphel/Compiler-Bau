@@ -1,5 +1,7 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,8 +15,10 @@ public class LocalOrFieldVar extends Expression {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        //TODO: here we need the localvars,
+        //suche nach field -> GETFIELD
+        // ansonsten aload ?
     }
 
     @Override
@@ -27,4 +31,5 @@ public class LocalOrFieldVar extends Expression {
             return type;
         }
     }
+
 }

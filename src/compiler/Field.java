@@ -1,8 +1,12 @@
 package compiler;
 
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
-public class Field extends Expression {
+public class Field implements TypedParserObject {
 
     String name;
     Type type;
@@ -14,10 +18,10 @@ public class Field extends Expression {
     }
 
 
-    @Override
-    public void codeGen() {
-        // TODO Auto-generated method stub
 
+    public void codeGen(ClassWriter cw) {
+        FieldVisitor field = cw.visitField(0, name, "todo: class name", null, null);
+        field.visitEnd();
     }
 
 

@@ -1,6 +1,7 @@
 package compiler;
 
 import compiler.exception.TypeMismatchException;
+import org.objectweb.asm.MethodVisitor;
 
 import java.util.Map;
 
@@ -18,8 +19,9 @@ public class Binary extends Expression {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        // the binary can be the condition of an if block, if so we have to implement a jump here
+        // else 2 xLOADS and the respective binary operation
     }
 
     @Override

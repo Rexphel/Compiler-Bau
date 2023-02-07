@@ -1,5 +1,8 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+
 import java.util.Map;
 
 public class JChar extends Expression {
@@ -12,8 +15,8 @@ public class JChar extends Expression {
     }
 
     @Override
-    public void codeGen() {
-
+    public void codeGen(MethodVisitor method) {
+        method.visitIntInsn(Opcodes.BIPUSH, this.c);
     }
 
     @Override

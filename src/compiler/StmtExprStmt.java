@@ -1,8 +1,9 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
-//public class StmtExprStmt  implements TypedParserObject { // TODO: Which is right?
 public class StmtExprStmt extends Statement {
 
     StmtExpr statementExpression;
@@ -14,9 +15,8 @@ public class StmtExprStmt extends Statement {
 
 
     @Override
-    public void codeGen() {
-        // TODO Auto-generated method stub
-
+    public void codeGen(MethodVisitor method) {
+        statementExpression.codeGen(method);
     }
 
     @Override

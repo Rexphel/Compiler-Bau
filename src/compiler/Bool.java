@@ -1,5 +1,7 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.Map;
 
 public class Bool extends Expression {
@@ -12,7 +14,8 @@ public class Bool extends Expression {
     }
 
     @Override
-    public void codeGen() {
+    public void codeGen(MethodVisitor method) {
+        //wahrscheinlich was mit ZCONST
 
     }
 

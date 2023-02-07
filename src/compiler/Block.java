@@ -1,26 +1,31 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Block extends Statement {
 
-    // TODO: Maybe compiler.Statement list/array?
-    List<Statement> statement;
+    List<Statement> statements;
 
     public Block(List<Statement> statement) {
-        this.statement = statement;
+        this.statements = statement;
     }
 
     @Override
-    public void codeGen() {
+    public void codeGen(MethodVisitor method) {
+        for (Statement statement : statements) {
+            statement.codeGen(method);
+        }
+
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         List<Type> types = new ArrayList<>(List.of());
-        statement.forEach(statement1 -> {
+        statements.forEach(statement1 -> {
             Type typ1 = statement1.typeCheck(localVars, clazz);
             if (!typ1.equals(Type.VOID)) {
                 types.add(typ1);
