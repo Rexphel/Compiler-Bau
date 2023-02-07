@@ -3,7 +3,7 @@ package compiler;
 import java.util.Map;
 
 public class JChar extends Expression {
-    
+
     char c;
 
 

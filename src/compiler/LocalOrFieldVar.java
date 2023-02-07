@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class LocalOrFieldVar extends Expression {
-    
+
     String name;
 
     public LocalOrFieldVar(String name) {
@@ -19,9 +19,9 @@ public class LocalOrFieldVar extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        Set<Map.Entry<String,Type>> set = localVars.entrySet().stream().filter(stringTypeEntry -> stringTypeEntry.getKey().equals(name)).collect(Collectors.toSet());
-        if(set.isEmpty()){
-            throw new RuntimeException("no Variable found") ;
+        Set<Map.Entry<String, Type>> set = localVars.entrySet().stream().filter(stringTypeEntry -> stringTypeEntry.getKey().equals(name)).collect(Collectors.toSet());
+        if (set.isEmpty()) {
+            throw new RuntimeException("no Variable found");
         } else {
             type = localVars.get(name);
             return type;

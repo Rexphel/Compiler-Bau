@@ -4,7 +4,7 @@ import java.util.Map;
 
 //public class StmtExprStmt  implements TypedParserObject { // TODO: Which is right?
 public class StmtExprStmt extends Statement {
-    
+
     StmtExpr statementExpression;
     Type type;
 
@@ -16,7 +16,7 @@ public class StmtExprStmt extends Statement {
     @Override
     public void codeGen() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -24,7 +24,6 @@ public class StmtExprStmt extends Statement {
         type = Type.VOID;
         return type;
     }
-
 
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Block extends Statement {
-    
+
     // TODO: Maybe compiler.Statement list/array?
     List<Statement> statement;
 
@@ -21,12 +21,12 @@ public class Block extends Statement {
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         List<Type> types = new ArrayList<>(List.of());
         statement.forEach(statement1 -> {
-           Type typ1 = statement1.typeCheck(localVars, clazz);
-           if (!typ1.equals(Type.VOID)) {
-               types.add(typ1);
-           }
-       });
-        if (!types.isEmpty()){
+            Type typ1 = statement1.typeCheck(localVars, clazz);
+            if (!typ1.equals(Type.VOID)) {
+                types.add(typ1);
+            }
+        });
+        if (!types.isEmpty()) {
             type = types.get(0); //Todo Obermenge von Typen bilden? Prof fragen
         } else {
             type = Type.VOID;
@@ -35,7 +35,5 @@ public class Block extends Statement {
 
     }
 
-
-    
 
 }

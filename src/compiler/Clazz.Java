@@ -1,10 +1,11 @@
 package compiler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Clazz extends Statement{
-    
+public class Clazz extends Statement {
+
     Type name;
     //Field[] fieldDecl;
     //Method[] methodDecl;
@@ -24,15 +25,12 @@ public class Clazz extends Statement{
 
     }
 
+    // TODO: Set clazz in general main of compiler, not here.
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        clazz = this;
-        for (var field : fieldDecl){
-            field.typeCheck(localVars, clazz);
-        }
-        for (var methode : methodDecl){
-            methode.typeCheck(localVars, clazz);
-        }
+        List<TypedParserObject> l = new ArrayList<>(fieldDecl);
+        l.addAll(methodDecl);
+        l.forEach(obj -> obj.typeCheck(localVars, clazz));
         type = Type.VOID;
         return type;
     }

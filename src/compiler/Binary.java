@@ -39,7 +39,7 @@ public class Binary extends Expression {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
             } else if (
-                    (name.equals("&&")||name.equals("||")) &&
+                    (name.equals("&&") || name.equals("||")) &&
                             expression1.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
             ) {
                 type = expression1.typeCheck(localVars, clazz);
@@ -47,7 +47,9 @@ public class Binary extends Expression {
             } else {
                 throw new TypeMismatchException("Name does not match or expressions are from wrong Type");
             }
-        } else {throw new TypeMismatchException("Binary Expression Types does not match");}
+        } else {
+            throw new TypeMismatchException("Binary Expression Types does not match");
+        }
 
     }
 }

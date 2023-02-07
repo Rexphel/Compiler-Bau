@@ -3,7 +3,7 @@ package compiler;
 import java.util.Map;
 
 public class LocalVarDecl extends Statement {
-    
+
     Type type;
     String name;
 
@@ -19,7 +19,7 @@ public class LocalVarDecl extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        localVars.put(name,type);
+        localVars.put(name, type);
         return type;
     }
 

@@ -3,7 +3,7 @@ package compiler;
 import java.util.Map;
 
 public class Bool extends Expression {
-    
+
     boolean bool;
 
 

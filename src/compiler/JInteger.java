@@ -3,7 +3,7 @@ package compiler;
 import java.util.Map;
 
 public class JInteger extends Expression {
-    
+
     Integer i;
 
     public JInteger(Integer i) {

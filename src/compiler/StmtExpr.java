@@ -1,10 +1,7 @@
 package compiler;
 
-import java.util.Map;
-import java.util.Vector;
-
 public abstract class StmtExpr implements TypedParserObject {
-    
+
     Expression expression;
     Statement statement;
     Type type;

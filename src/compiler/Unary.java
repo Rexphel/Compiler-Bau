@@ -5,7 +5,7 @@ import compiler.exception.TypeMismatchException;
 import java.util.Map;
 
 public class Unary extends Expression {
-    
+
     String name;
     Expression expression;
 
@@ -22,8 +22,8 @@ public class Unary extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if(expression.typeCheck(localVars, clazz).equals(Type.INTEGER)
-        && "+*".contains(name)){
+        if (expression.typeCheck(localVars, clazz).equals(Type.INTEGER)
+                && "+*".contains(name)) {
             type = expression.typeCheck(localVars, clazz);
             return type;
         } else if (name.equals("!")

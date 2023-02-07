@@ -20,10 +20,10 @@ public class Assign extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if(localVars.get(varName).equals(expression.typeCheck(localVars, clazz))){
-            type =  expression.typeCheck(localVars, clazz);
+        if (localVars.get(varName).equals(expression.typeCheck(localVars, clazz))) {
+            type = expression.typeCheck(localVars, clazz);
             return type;
-        } else{
+        } else {
             throw new RuntimeException("VarType and expression Type mismatch");
         }
     }
