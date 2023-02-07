@@ -3,7 +3,6 @@ package compiler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class Block extends Statement {
     
@@ -11,7 +10,6 @@ public class Block extends Statement {
     List<Statement> statement;
 
     public Block(List<Statement> statement) {
-        super(null);
         this.statement = statement;
     }
 
@@ -20,17 +18,17 @@ public class Block extends Statement {
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         List<Type> types = new ArrayList<>(List.of());
         statement.forEach(statement1 -> {
-           Type typ1 = statement1.typeCheck(localVars, classes);
+           Type typ1 = statement1.typeCheck(localVars, clazz);
            if (!typ1.equals(Type.VOID)) {
                types.add(typ1);
            }
        });
-        if(!types.isEmpty()){
+        if (!types.isEmpty()){
             type = types.get(0); //Todo Obermenge von Typen bilden? Prof fragen
-        }else{
+        } else {
             type = Type.VOID;
         }
         return type;

@@ -3,7 +3,6 @@ package compiler;
 import compiler.exception.TypeMismatchException;
 
 import java.util.Map;
-import java.util.Vector;
 
 public class If extends Statement {
 
@@ -12,17 +11,21 @@ public class If extends Statement {
     Statement maybeStatement; // Nicht in UML
 
     public If(Expression condition, Statement statement, Statement mayStatement) {
-        super(null);
         this.condition = condition;
         this.statement = statement;
         this.maybeStatement = mayStatement;
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        if (condition.typeCheck(localVars, classes).equals(Type.BOOLEAN)
-                && statement.typeCheck(localVars, classes).equals(maybeStatement.typeCheck(localVars, classes))) {
-            type = statement.typeCheck(localVars, classes);
+    public void codeGen() {
+
+    }
+
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
+                && statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz))) {
+            type = statement.typeCheck(localVars, clazz);
             return type;
         } else {
             throw new TypeMismatchException("If Statement types do not match");

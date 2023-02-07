@@ -2,7 +2,6 @@ package compiler;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class New extends StmtExpr {
 
@@ -16,7 +15,12 @@ public class New extends StmtExpr {
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+    public void codeGen() {
+
+    }
+
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         if (super.expression != null && super.statement != null) {
             throw new RuntimeException("StmtExpr is both a statement and an expression!");
         }
@@ -25,7 +29,7 @@ public class New extends StmtExpr {
             type = Type.VOID;
             return type;
         } else {
-            type = super.expression.typeCheck(localVars, classes);
+            type = super.expression.typeCheck(localVars, clazz);
             return type;
         }
     }

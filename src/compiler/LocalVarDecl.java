@@ -1,7 +1,6 @@
 package compiler;
 
 import java.util.Map;
-import java.util.Vector;
 
 public class LocalVarDecl extends Statement {
     
@@ -9,13 +8,17 @@ public class LocalVarDecl extends Statement {
     String name;
 
     public LocalVarDecl(Type type, String name) {
-        super(null);
         this.type = type;
         this.name = name;
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+    public void codeGen() {
+
+    }
+
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         localVars.put(name,type);
         return type;
     }

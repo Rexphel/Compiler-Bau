@@ -3,7 +3,6 @@ package compiler;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class MethodCall extends StmtExpr {
 
@@ -19,16 +18,16 @@ public class MethodCall extends StmtExpr {
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+    public void codeGen() {
+
+    }
+
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         // TODO: Put Parameters in localVars
         parameterList.forEach(x -> localVars.put("ABC" /*TODO NAME*/, x.type));
-        var typeOfExpression = localVars.get(methodName);
-        var clazzList = classes.stream().filter(clazz -> clazz.name.equals(typeOfExpression)).toList();
-        if (clazzList.isEmpty()) {
-            throw new RuntimeException("No Class found in MethodCall!");
-        }
-        var clazz = clazzList.get(0);
-        return Arrays.stream(clazz.methodDecl)
+
+        return clazz.methodDecl.stream()
                 .filter(method -> method.name.equals(methodName))
                 .map(method -> method.type)
                 .findFirst()
