@@ -15,6 +15,7 @@ public class Bool extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return Type.BOOLEAN;
+        type = Type.BOOLEAN;
+        return type;
     }
 }

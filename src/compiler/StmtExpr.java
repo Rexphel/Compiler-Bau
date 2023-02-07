@@ -7,13 +7,15 @@ public class StmtExpr implements TypedParserObject {
     
     Expression expression;
     Statement statement;
+    Type type;
 
-
-    public StmtExpr(Expression expression, Statement statement) {
+    public StmtExpr(Expression expression) {
         this.expression = expression;
-        this.statement = statement;
     }
 
+    public StmtExpr(Statement statement) {
+        this.statement = statement;
+    }
 
     @Override
     public void codeGen() {

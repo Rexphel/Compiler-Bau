@@ -6,6 +6,7 @@ import java.util.Vector;
 public class Expression implements TypedParserObject {
 
     Expression expression; // ?
+    Type type;
 
     public Expression(Expression expression) {
         this.expression = expression;

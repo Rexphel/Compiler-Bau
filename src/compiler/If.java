@@ -9,7 +9,7 @@ public class If extends Statement {
 
     Expression condition;
     Statement statement; // IF
-    Statement maybeStatement; // Nich in UML
+    Statement maybeStatement; // Nicht in UML
 
     public If(Expression condition, Statement statement, Statement mayStatement) {
         super(null);
@@ -22,7 +22,8 @@ public class If extends Statement {
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         if (condition.typeCheck(localVars, classes).equals(Type.BOOLEAN)
                 && statement.typeCheck(localVars, classes).equals(maybeStatement.typeCheck(localVars, classes))) {
-            return statement.typeCheck(localVars, classes);
+            type = statement.typeCheck(localVars, classes);
+            return type;
         } else {
             throw new TypeMismatchException("If Statement types do not match");
         }

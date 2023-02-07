@@ -9,7 +9,7 @@ public class Assign extends StmtExpr {
     Expression expression;
 
     public Assign(String varName, Expression expression) {
-        super(null, null);
+        super((Expression) null);
         this.varName = varName;
         this.expression = expression;
     }
@@ -17,7 +17,8 @@ public class Assign extends StmtExpr {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         if(localVars.get(varName).equals(expression.typeCheck(localVars, classes))){
-            return expression.typeCheck(localVars, classes);
+            type =  expression.typeCheck(localVars, classes);
+            return type;
         } else{
             throw new RuntimeException("VarType and expression Type mismatch");
         }

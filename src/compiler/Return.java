@@ -15,6 +15,7 @@ public class Return extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return expression.typeCheck(localVars, classes);
+        type = expression.typeCheck(localVars, classes);
+        return type;
     }
 }

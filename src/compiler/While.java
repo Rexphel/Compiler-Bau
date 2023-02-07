@@ -18,7 +18,8 @@ public class While extends Statement {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
         if (expression.typeCheck(localVars, classes).equals(Type.BOOLEAN)) {
-            return statement.typeCheck(localVars, classes);
+            type = statement.typeCheck(localVars, classes);
+            return type;
         } else {
             throw new RuntimeException("expression Type does not match boolean");
         }

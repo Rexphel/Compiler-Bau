@@ -20,7 +20,8 @@ public class LocalOrFieldVar extends Expression {
         if(set.isEmpty()){
             throw new RuntimeException("no Variable found") ;
         } else {
-            return localVars.get(name);
+            type = localVars.get(name);
+            return type;
         }
     }
 }

@@ -15,6 +15,7 @@ public class JInteger extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return Type.INTEGER;
+        type = Type.INTEGER;
+        return type;
     }
 }

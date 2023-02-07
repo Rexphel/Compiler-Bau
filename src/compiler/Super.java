@@ -12,6 +12,7 @@ public class Super extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        return new Type("void"); //Todo implementieren? kein plan was hier machen
+        type = Type.VOID;
+        return type; //Todo implementieren? kein plan was hier machen
     }
 }
