@@ -1,5 +1,3 @@
-package ast;
-
 public class If extends Statement {
 
     Expression condition;
