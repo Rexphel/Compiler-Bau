@@ -45,8 +45,7 @@
 %token EOF
 %token DOT
 
-%type <If> Ifthenstatement
-%type <??> Ifthenelsestatement
+%type <If> Ifthenstatement Ifthenelsestatement
 %type <While> Whilestatement
 %type <Block> Block
 %type <LocalVarDecl> Localvardecleration
@@ -80,7 +79,7 @@ Expression          : SUPER {$$ = New Super($1);}
 					| CHARLITERAL {$$ = New JChar($1);}
 					| STRINGLITERAL {$$ = New JString($1);} // ToDo: JString otr String?
 					| NULLLITERAL {$$ = New JNull($1);}
-					| Stmtexprexpr
+					| Stmtexprexpr {$$ = $1}
 
 Stmtexpr			: Assignment {$$ = $1;}
 					| New {$$ = $1;}
@@ -117,7 +116,7 @@ Stmtexprstmt		: Stmtexpr SEMICOLON {New StmtExprStmt($1);}
 
 Assignment          : Localorfieldvar ASSIGN Expression { $$ = New Assignment($1, $3); }
 
-New					: NEW type LBRACKET Expressions RIGHTBRACKET
+New					: NEW Type LBRACKET Expressions RIGHTBRACKET { $$ = new New($2, $4); }
 
 Expressions			: Expression {
 						ArrayList<Expression> exprList = New ArrayList<>();
@@ -126,7 +125,8 @@ Expressions			: Expression {
 					  }
 					| Expressions COMMA Expression {$1.add($2); $$ = $1;}
 
-Methodcall			: IDENTIFIER LBRACKET Expressions RBRACKET {$$ = New MethodCall(Optional.empty(), $1, $3);}
+Methodcall			: Expression DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = New MethodCall($1, $3, $5);}
+					| IDENTIFIER LBRACKET Expressions RBRACKET {$$ = New MethodCall(new This(), $1, $3);}
                     
 Statements          : Statement {
 						ArrayList<Statement> stmtList = New ArrayList<>(); 
@@ -135,60 +135,67 @@ Statements          : Statement {
  					  }
                     | Statements Statement {$1.add($2); $$ = $1;}
 
-Ifthenstatement     : IF LBRACKET bexpression  RBRACKET  Statement {$$ = New ifStmt($3, $5, Optional.empty());}
+Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = New ifStmt($3, $5, null);}
 
-Ifthenelsestatement : IF LBRACKET bexpression  RBRACKET Statement ELSE Statement  {$$ = New ifStmt($3, $5, Optional.of($7));}
+Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = New ifStmt($3, $5, new Statement($7));}
 
-Whilestatement      : WHILE LBRACKET bexpression  RBRACKET  Statement {$$ = New While($3, $5);}
+Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = New While($3, $5);}
 
-Block               : LBRACKET   RBRACKET { }
-                    | LBRACKET  Statements  RBRACKET { }
+Block               : LBRACKET   RBRACKET { $$ = new Block(new ArrayList<Statement>()) }
+                    | LBRACKET  Statements  RBRACKET { $$ = new Block($2) }
 
 Returnstatement     : RETURN SEMICOLON  { $$ = New Return(null) }
                     | RETURN Expression  SEMICOLON { $$ = New Return($2)}
 
-Variable            : type name SEMICOLON { }
-                    | type name EQUAL Expression SEMICOLON { }
+Field            	: type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
+                    | type IDENTIFIER ASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
 
-Paramenters         : parameters COMMA type name { 
+Parameters         : parameters COMMA type IDENTIFIER { 
 						paramMap = New HashMap<String, Type>();
 						paramMap.putAll($1);
 						paramMap.put($4, $3);
 						$$ = paramMap;
 					}
-                    | type name { 
+                    | type IDENTIFIER { 
 						paramMap = New HashMap<String, Type>();
 						paramMap.put($2, $1);
 						$$ = paramMap;
 					}
 
-Method              : type name LBRACE parameters RBRACE Block { 
+Method              : type IDENTIFIER LBRACE parameters RBRACE Block { 
 						$$ = New Method($2, $1, $4, $6);
 					}
 					
 // ToDo: Does Clazz Class need the whole Statement string?
-Class               : CLASS name LBRACKET RBRACKET { $$ = New Clazz("", New Type($2), New Field[]{}, New Method[]{}); }
-                    | CLASS name LREACKET VarsAndMethods RBRACKET { $$ = New Clazz("", New Type($2), $4.fieldDecl, $4.methodDecl); }
+Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = New Clazz("", New Type($2), New Field[]{}, New Method[]{}); }
+                    | CLASS IDENTIFIER LREACKET VarsAndMethods RBRACKET { $$ = New Clazz("", New Type($2), $4.fieldDecl, $4.methodDecl); }
 
-VarsAndMethods      : VarsAndMethods Variable { 
+FieldsAndMethods      : FieldsAndMethods Field { 
 						$$ = New Clazz(
 							"", New Type(""), 
 							New ArrayList<>($1.fieldDecl).add($2).toArray(New Field[$1.fieldDecl.length +1]),
 							$1.methodDecl
 						);
 					}
-                    | VarsAndMethods Method { 
+                    | FieldsAndMethods Method { 
 						$$ = New Clazz(
 							"", New Type(""), 
 							$1.fieldDecl ,
 							New ArrayList<>($1.methodDecl).add($2).toArray(New Field[$1.methodDecl.length +1])
 						);
 					}
-                    | Variable { 
+                    | Field { 
 						$$ = New Clazz("", New Type(""), New Field[]{$1}, New Method[]{});
 					}
                     | Method { 
 						$$ = New Clazz("", New Type(""), New Field[]{}, New Method[]{$1});
 					}
+
+type				: VOID {$$ = new Type($1)}
+					| BOOLEAN {$$ = new Type($1)}
+					| CHAR {$$ = new Type($1)}
+					| STRING {$$ = new Type($1)}
+					| INT {$$ = new Type($1)}
+
 %%
 }
