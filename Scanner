@@ -30,6 +30,7 @@ ws = [ \t\r\n\b\015]+
 "{" {System.out.print(yytext()); return new LBRACE(yytext());}
 "}" {System.out.print(yytext()); return new RBRACE(yytext());}
 ";" {System.out.print(yytext()); return new SEMICOLON(yytext());}
+"." {System.out.print(yytext()); return new DOT(yytext());}
 
 "+" {System.out.print(yytext()); return new PLUS(yytext());}
 "-" {System.out.print(yytext()); return new MINUS(yytext());}
@@ -52,7 +53,7 @@ ws = [ \t\r\n\b\015]+
 
 "null" {System.out.print(yytext()); return new NULLLITERAL(yytext());}
 true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
-[1-9][0-9]*[IL]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
+[1-9][0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
 \".*\" {System.out.print(yytext()); return new STRINGLITERAL(yytext());}
 
 "class" {System.out.print(yytext()); return new CLASS(yytext());}
