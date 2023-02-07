@@ -43,6 +43,7 @@
 %token VOID
 %token IDENTIFIER
 %token EOF
+%token DOT
 
 %type <If> Ifthenstatement
 %type <??> Ifthenelsestatement
@@ -89,7 +90,7 @@ Stmtexpr			: Assignment {$$ = $1;}
 
 Localorfieldvar		: IDENTIFIER {$$ = New LocalOrFieldVar($1);}
 
-Instvar				: Localorfieldvar POINT IDENTIFIER {$$ = New InstVar($1, $3);}
+Instvar				: Localorfieldvar DOT IDENTIFIER {$$ = New InstVar($1, $3);}
 
 Unary				: Unaryoperator Expression {$$ = New Unary($1, $2);}
 
