@@ -1,5 +1,7 @@
 package compiler;
 
+import org.objectweb.asm.MethodVisitor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class New extends StmtExpr {
     }
 
     @Override
-    public void codeGen() {
+    public void codeGen(MethodVisitor method) {
 
     }
 
@@ -33,5 +35,13 @@ public class New extends StmtExpr {
             type = super.expression.typeCheck(localVars, clazz);
             return type;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "New{" +
+                "type=" + type +
+                ",\n expressionList=" + expressionList +
+                "\n}";
     }
 }

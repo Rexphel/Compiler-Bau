@@ -10,23 +10,27 @@ public class Field implements TypedParserObject {
 
     String name;
     Type type;
+    Expression initialValue;
 
 
-    public Field(String name, Type type) {
+    public Field(String name, Type type, Expression initialValue) {
         this.name = name;
         this.type = type;
+        this.initialValue = initialValue;
     }
 
 
 
     public void codeGen(ClassWriter cw) {
-        FieldVisitor field = cw.visitField(0, name, "todo: class name", null, null);
+        FieldVisitor field = cw.visitField(0, name, type.getTypeLiteral(), null, null);
         field.visitEnd();
+        //initialValue is handled by the constructor in Clazz
     }
 
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        //TODO: the new initialValue has to be checked
         boolean b = false;
         for (int i = 0; i < localVars.size(); i++) {
             if (localVars.keySet().toArray()[i].equals(name)) {
@@ -40,5 +44,11 @@ public class Field implements TypedParserObject {
         return type;
     }
 
-
+    @Override
+    public String toString() {
+        return "Field{" +
+                "name='" + name + '\'' +
+                ",\n type=" + type +
+                "\n}";
+    }
 }

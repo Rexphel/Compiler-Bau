@@ -40,5 +40,10 @@ public class Block extends Statement {
 
     }
 
-
+    @Override
+    public String toString() {
+        return "Block{\n" +
+                "statements=" + statements + "\n"+
+                '}';
+    }
 }

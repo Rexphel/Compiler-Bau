@@ -17,4 +17,9 @@ public class JNull extends Expression {
         type = Type.NULL;
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "JNull()";
+    }
 }

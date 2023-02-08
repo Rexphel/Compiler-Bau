@@ -8,7 +8,7 @@ import org.objectweb.asm.*;
 import static jdk.internal.org.objectweb.asm.Opcodes.ALOAD;
 import static jdk.internal.org.objectweb.asm.Opcodes.INVOKESPECIAL;
 
-public class Clazz extends Statement {
+public class Clazz implements TypedParserObject {
 
     Type name;
     //Field[] fieldDecl;
@@ -23,8 +23,6 @@ public class Clazz extends Statement {
         this.methodDecl = methodDecl;
     }
 
-
-    @Override
     public void codeGen() {
         //we probably want to instantiate the cw in the Main class
         ClassWriter cw = new ClassWriter( ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
@@ -38,7 +36,7 @@ public class Clazz extends Statement {
 
         for (Field f : fieldDecl){
             // cw.visitField(...);
-            f.codeGen();
+            f.codeGen(cw);
         }
 
         //constructor
@@ -53,6 +51,14 @@ public class Clazz extends Statement {
         constructor.visitVarInsn(ALOAD, 0);
         constructor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 
+        for (Field field : fieldDecl) {
+            if (field.initialValue != null){
+                constructor.visitVarInsn(Opcodes.ALOAD, 0);
+                field.initialValue.codeGen(constructor);
+                constructor.visitFieldInsn(Opcodes.PUTFIELD, this.name.type, field.name, field.type.getTypeLiteral() );
+            }
+        }
+
         // wenn in FieldDecl statt nur field auch assign stehen kann müssen hier im Konstructor die Initialwerte geladen werden
         constructor.visitInsn(Opcodes.RETURN);
         constructor.visitMaxs(0,0);
@@ -60,7 +66,7 @@ public class Clazz extends Statement {
 
         //methods
         for(Method m : methodDecl) {
-            m.codeGen();
+            m.codeGen(cw);
         }
 
 
@@ -74,8 +80,17 @@ public class Clazz extends Statement {
         List<TypedParserObject> l = new ArrayList<>(fieldDecl);
         l.addAll(methodDecl);
         l.forEach(obj -> obj.typeCheck(localVars, clazz));
-        type = Type.VOID;
-        return type;
+        return Type.VOID;
+//        type = Type.VOID;
+//        return type;
     }
 
+    @Override
+    public String toString() {
+        return "Clazz{" +
+                "name=" + name +
+                ",\n fieldDecl=" + fieldDecl +
+                ",\n methodDecl=" + methodDecl +
+                "\n}";
+    }
 }

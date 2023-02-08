@@ -24,4 +24,11 @@ public class JInteger extends Expression {
         type = Type.INTEGER;
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "JInteger{" +
+                "\ni=" + i +
+                "\n}";
+    }
 }

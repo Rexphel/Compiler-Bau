@@ -19,4 +19,9 @@ public class Super extends Expression {
         type = Type.VOID;
         return type; //Todo implementieren? kein plan was hier machen
     }
+
+    @Override
+    public String toString() {
+        return "Super()";
+    }
 }

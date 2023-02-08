@@ -1,7 +1,9 @@
 package compiler;
 
 import compiler.exception.TypeMismatchException;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.util.Map;
 
@@ -20,12 +22,55 @@ public class Binary extends Expression {
 
     @Override
     public void codeGen(MethodVisitor method) {
-        // the binary can be the condition of an if block, if so we have to implement a jump here
-        // else 2 xLOADS and the respective binary operation
+        // TODO: we want another if branch before, where the different compare operations are handled
+
+        // this should be the else branch then
+        if (this.type.type.equals("int")){
+            expression1.codeGen(method);
+            expression2.codeGen(method);
+            switch (name){
+                case "+" -> method.visitInsn(Opcodes.IADD);
+                case "-" -> method.visitInsn(Opcodes.ISUB);
+                case "*" -> method.visitInsn(Opcodes.IMUL);
+                case "%" -> method.visitInsn(Opcodes.IREM);
+            }
+        }
+        if (this.type.type.equals("boolean")) {
+            Label trueLabel = new Label();
+            Label falseLabel = new Label();
+            //load first
+            switch (name){
+                case "&&" -> {
+                    expression1.codeGen(method);
+                    method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
+                    expression2.codeGen(method);
+                    method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
+                    method.visitJumpInsn(Opcodes.GOTO, trueLabel);
+                }
+                case "||" -> {
+                    expression1.codeGen(method);
+                    method.visitJumpInsn(Opcodes.IFNE, trueLabel);
+                    expression2.codeGen(method);
+                    method.visitJumpInsn(Opcodes.IFNE, trueLabel);
+                    method.visitJumpInsn(Opcodes.GOTO, falseLabel);
+                }
+            }
+            Label endLabel = new Label();
+            method.visitLabel(trueLabel);
+            method.visitInsn(Opcodes.ICONST_1);
+
+            method.visitJumpInsn(Opcodes.GOTO, endLabel);
+
+            method.visitLabel(falseLabel);
+            method.visitInsn(Opcodes.ICONST_0);
+
+            method.visitLabel(endLabel);
+        }
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        //TODO: there are some more binary operations (==, !=, <, >, <=, >=)
 
         if (
                 expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))
@@ -53,5 +98,14 @@ public class Binary extends Expression {
             throw new TypeMismatchException("Binary Expression Types does not match");
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return "Binary{" +
+                "name='" + name + '\'' +
+                ",\n expression1=" + expression1 +
+                ",\n expression2=" + expression2 +
+                "\n}";
     }
 }

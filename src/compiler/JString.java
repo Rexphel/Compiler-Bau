@@ -23,4 +23,11 @@ public class JString extends Expression {
         type = Type.STRING;
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "JString{" +
+                "\nstr='" + str + '\'' +
+                "\n}";
+    }
 }

@@ -24,4 +24,11 @@ public class JChar extends Expression {
         type = Type.CHAR;
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "JChar{" +
+                "\nc=" + c +
+                "\n}";
+    }
 }

@@ -1,6 +1,7 @@
 package compiler;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,12 @@ public class LocalOrFieldVar extends Expression {
         //TODO: here we need the localvars,
         //suche nach field -> GETFIELD
         // ansonsten aload ?
+        if (true /*is LocalVar*/){
+            int localIndex = 1; //TODO: get index from localvars List
+            method.visitVarInsn(Opcodes.ILOAD, localIndex);
+        } else if (true /*is Field*/){
+
+        }
     }
 
     @Override
@@ -32,4 +39,10 @@ public class LocalOrFieldVar extends Expression {
         }
     }
 
+    @Override
+    public String toString() {
+        return "LocalOrFieldVar{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

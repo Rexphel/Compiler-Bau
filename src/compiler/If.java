@@ -25,7 +25,7 @@ public class If extends Statement {
         Label elseLabel = new Label();
         Label endLabel = new Label();
         condition.codeGen(method);
-        //jump probably from inside the binary epr
+        //either we want the condition to load a Bool object reference on the stack, or 0/1 as an ICONST - probably the Bool object is better for sake of continuity
         // ifblock
         //TODO: this has to be tested! Can work like this. Problem: return inside the if-Block, few Labels could be unnecessary then.
         statement.codeGen(method);
@@ -48,4 +48,12 @@ public class If extends Statement {
         }
     }
 
+    @Override
+    public String toString() {
+        return "If{\n" +
+                "condition=" + condition +
+                ",\n statement=" + statement +
+                ",\n maybeStatement=" + maybeStatement +
+                "\n}";
+    }
 }

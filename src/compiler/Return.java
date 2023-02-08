@@ -30,4 +30,11 @@ public class Return extends Statement {
         };
         method.visitInsn(returnCode);
     }
+
+    @Override
+    public String toString() {
+        return "Return{" +
+                "\nexpression=" + expression +
+                "\n}";
+    }
 }

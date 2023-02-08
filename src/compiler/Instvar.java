@@ -19,7 +19,7 @@ public class Instvar extends Expression {
 
     @Override
     public void codeGen(MethodVisitor method) {
-        //TODO: we probably only call an Instvar with "this", then it is gonna be a GETFIELD instruction (insn)
+        //TODO: we probably only call an Instvar with "this", then it is gonna be a GETFIELD instruction (insn) (this should aload 0)
     }
 
     @Override
@@ -33,5 +33,13 @@ public class Instvar extends Expression {
         } else {
             throw new RuntimeException("Field " + name + " not found.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Instvar{" +
+                "name='" + name + '\'' +
+                ",\n expression=" + expression +
+                "\n}";
     }
 }

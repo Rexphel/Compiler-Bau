@@ -25,5 +25,11 @@ public class StmtExprStmt extends Statement {
         return type;
     }
 
-
+    @Override
+    public String toString() {
+        return "StmtExprStmt{" +
+                "\nstatementExpression=" + statementExpression +
+                ",\n type=" + type +
+                "\n}";
+    }
 }

@@ -22,4 +22,11 @@ public class StmtExprExpr extends Expression {
         type = stmtExpr.typeCheck(localVars, clazz);
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "StmtExprExpr{" +
+                "\nstmtExpr=" + stmtExpr +
+                "\n}";
+    }
 }

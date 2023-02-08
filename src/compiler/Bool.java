@@ -1,6 +1,7 @@
 package compiler;
 
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.util.Map;
 
@@ -15,7 +16,11 @@ public class Bool extends Expression {
 
     @Override
     public void codeGen(MethodVisitor method) {
-        //wahrscheinlich was mit ZCONST
+        if (bool){
+            method.visitInsn(Opcodes.ICONST_1);
+        } else {
+            method.visitInsn(Opcodes.ICONST_0);
+        }
 
     }
 
@@ -23,5 +28,12 @@ public class Bool extends Expression {
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         type = Type.BOOLEAN;
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return "Bool{\n" +
+                "bool=" + bool + "\n" +
+                '}';
     }
 }

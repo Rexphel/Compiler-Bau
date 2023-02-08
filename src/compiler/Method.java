@@ -22,22 +22,28 @@ public class Method implements TypedParserObject {
 
 
     public void codeGen(ClassWriter cw) {
-        StringBuilder parameterString = new StringBuilder();
-        for (Type value : parameters.values()) {
-            parameterString.append(value.getTypeLiteral());
-        }
         MethodVisitor method = cw.visitMethod(
             Opcodes.ACC_PUBLIC, 
             name,
-            "(" + parameterString + ")" + type.getTypeLiteral(),
+            getTypeSignature(),
                 null,
                 null);
-        //labels here if needed - probably not
+        //TODO: add the parameters to a localvars list and pass it down the codeGen method
 
         method.visitCode();
         block.codeGen(method);
         method.visitMaxs(0, 0);
         method.visitEnd();
+    }
+
+    public String getTypeSignature(){
+        StringBuilder signature = new StringBuilder("(");
+        for (Type value : parameters.values()) {
+            signature.append(value.getTypeLiteral());
+        }
+        signature.append(")");
+        signature.append(this.type.getTypeLiteral());
+        return signature.toString();
     }
 
     @Override
@@ -50,5 +56,13 @@ public class Method implements TypedParserObject {
         }//Todo delete local variables from Map  - how about using a copy of the map instead of passing the same map down?
     }
 
-
+    @Override
+    public String toString() {
+        return "Method{" +
+                "name='" + name + '\'' +
+                ",\n type=" + type +
+                ",\n parameters=" + parameters +
+                ",\n block=" + block +
+                "\n}";
+    }
 }
