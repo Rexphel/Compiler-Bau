@@ -29,6 +29,7 @@ ws = [ \t\r\n\b\015]+
 ")" {System.out.print(yytext()); return new RBRACKET(yytext());}
 "{" {System.out.print(yytext()); return new LBRACE(yytext());}
 "}" {System.out.print(yytext()); return new RBRACE(yytext());}
+"," {System.out.print(yytext()); return new COMMA(yytext());}
 ";" {System.out.print(yytext()); return new SEMICOLON(yytext());}
 "." {System.out.print(yytext()); return new DOT(yytext());}
 
