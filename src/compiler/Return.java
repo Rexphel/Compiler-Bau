@@ -1,21 +1,24 @@
 package compiler;
 
 import java.util.Map;
-import java.util.Vector;
 
 public class Return extends Statement {
-    
+
     Expression expression;
 
 
     public Return(Expression expression) {
-        super(null);
         this.expression = expression;
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
-        type = expression.typeCheck(localVars, classes);
+    public void codeGen() {
+
+    }
+
+    @Override
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        type = expression.typeCheck(localVars, clazz);
         return type;
     }
 }

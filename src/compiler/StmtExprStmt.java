@@ -1,16 +1,14 @@
 package compiler;
 
 import java.util.Map;
-import java.util.Vector;
 
 //public class StmtExprStmt  implements TypedParserObject { // TODO: Which is right?
 public class StmtExprStmt extends Statement {
-    
+
     StmtExpr statementExpression;
     Type type;
 
     public StmtExprStmt(StmtExpr StatementExpression) {
-        super(null);
         this.statementExpression = StatementExpression;
     }
 
@@ -18,15 +16,14 @@ public class StmtExprStmt extends Statement {
     @Override
     public void codeGen() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
-    public Type typeCheck(Map<String, Type> localVars, Vector<Clazz> classes) {
+    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         type = Type.VOID;
         return type;
     }
-
 
 
 }
