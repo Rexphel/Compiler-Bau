@@ -1,10 +1,9 @@
 
 %{
+
+	import java.util.*;
     class MiniJavaParser {
-        public static void main(String[] args) {
-            System.out.println("Hello World!");
-        }
-    }
+        
 %}
 
 %token LBRACE
@@ -92,7 +91,7 @@ Statement           : Ifthenstatement {$$ = $1;}
                     | Block {$$ = $1;}
                     | Emptystatement {$$ = $1;}
                     | Returnstatement {$$ = $1;}
-					| Stmtexprstmt {$$ = $1}
+					| Stmtexprstmt {$$ = $1;}
 
 Expression          : SUPER {$$ = new Super();}
 					| Localorfieldvar {$$ = $1;}
@@ -104,7 +103,7 @@ Expression          : SUPER {$$ = new Super();}
 					| CHARLITERAL {$$ = new JChar($1);}
 					| STRINGLITERAL {$$ = new JString($1);}
 					| NULLLITERAL {$$ = new JNull();}
-					| Stmtexprexpr {$$ = $1}
+					| Stmtexprexpr {$$ = $1;}
 
 Emptystatement		: SEMICOLON { $$ = null;}
 
@@ -167,9 +166,9 @@ Statements          : Statement {
 						$$ = $1;
 					}
 
-Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new If($3, $5, null);}
+Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new ifStmt($3, $5, null);}
 
-Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new If($3, $5, $7);}
+Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new ifStmt($3, $5, new Statement($7));}
 
 Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
 
@@ -193,7 +192,6 @@ Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block {
 						$$ = new Method($2, $1, $4, $6);
 					}
 					
-// ToDo: Does Clazz Class need the whole Statement string?
 Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
                     | CLASS IDENTIFIER LBRACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
@@ -226,3 +224,4 @@ Type				: VOID { $$ = new Type($1); }
 					| STRING { $$ = new Type($1); }
 					| INT { $$ = new Type($1); }
 %%
+}
