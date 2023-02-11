@@ -85,7 +85,7 @@
 %type <Parameters> Parameters
 %%
 
-Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>())}
+Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>());}
                     | LBRACKET Statements  RBRACKET { $$ = new Block($2); }
 
 Statement           : Ifthenstatement {$$ = $1;}  
@@ -96,7 +96,7 @@ Statement           : Ifthenstatement {$$ = $1;}
                     | Returnstatement {$$ = $1;}
 					| Stmtexprstmt {$$ = $1}
 
-Expression          : SUPER {$$ = new Super($1);}
+Expression          : SUPER {$$ = new Super();}
 					| Localorfieldvar {$$ = $1;}
 					| Instvar {$$ = $1;}
 					| Unary {$$ = $1;}
@@ -108,7 +108,7 @@ Expression          : SUPER {$$ = new Super($1);}
 					| NULLLITERAL {$$ = new JNull();}
 					| Stmtexprexpr {$$ = $1}
 
-Emptystatement		: SEMICOLON { $$ = null}
+Emptystatement		: SEMICOLON { $$ = null;}
 
 Stmtexpr			: Assignment {$$ = $1;}
 					| New {$$ = $1;}
@@ -150,7 +150,7 @@ Expressions			: Expression {
 						exprList.add($1);
 						$$ = exprList;
 					  }
-					| Expressions COMMA Expression {$1.add($2); $$ = $1;}
+					| Expressions COMMA Expression {$1.add($3); $$ = $1;}
 
 Methodcall			: Expression DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall($1, $3, $5);}
 					| IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall(new This(), $1, $3);}
@@ -172,18 +172,15 @@ Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement 
 
 Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
 
-Block               : LBRACKET   RBRACKET { $$ = new Block(new ArrayList<Statement>()) }
-                    | LBRACKET  Statements  RBRACKET { $$ = new Block($2) }
-
-Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null) }
-                    | RETURN Expression  SEMICOLON { $$ = new Return($2)}
+Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null); }
+                    | RETURN Expression  SEMICOLON { $$ = new Return($2); }
 
 Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
                     | Type IDENTIFIER ASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
 
-Localvardecleration : Type IDENTIFIER ( $$ = new LocalVarDecl($1, $2))
+Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2);}
 
-Parameter			: Type IDENTIFIER { $$ = new Parameter($1, $2)}
+Parameter			: Type IDENTIFIER { $$ = new Parameter($1, $2);}
 
 Parameters          : Parameters COMMA Parameter { 
 						paramMap = new HashMap<String, Type>();
@@ -206,17 +203,19 @@ Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", ne
                     | CLASS IDENTIFIER LBRACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
 FieldsAndMethods      : FieldsAndMethods Field { 
+						$1.fieldDecl.add($2);
 						$$ = new Clazz(
 							"", new Type(""), 
-							new ArrayList<>($1.fieldDecl.add($2)),
+							$1.fieldDecl,
 							$1.methodDecl
 						);
 					}
                     | FieldsAndMethods Method { 
+						$1.methodDecl.add($2);
 						$$ = new Clazz(
 							"", new Type(""), 
 							$1.fieldDecl ,
-							new ArrayList<>($1.methodDecl.add($2))
+							$1.methodDecl
 						);
 					}
                     | Field { 
@@ -226,10 +225,10 @@ FieldsAndMethods      : FieldsAndMethods Field {
 						$$ = new Clazz("", new Type(""), new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList($1)));
 					}
 
-Type				: VOID {$$ = new Type($1)}
-					| BOOLEAN {$$ = new Type($1)}
-					| CHAR {$$ = new Type($1)}
-					| STRING {$$ = new Type($1)}
-					| INT {$$ = new Type($1)}
+Type				: VOID { $$ = new Type($1); }
+					| BOOLEAN { $$ = new Type($1); }
+					| CHAR { $$ = new Type($1); }
+					| STRING { $$ = new Type($1); }
+					| INT { $$ = new Type($1); }
 
 %%
