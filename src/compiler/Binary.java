@@ -25,10 +25,10 @@ public class Binary extends Expression {
         // TODO: we want another if branch before, where the different compare operations are handled
 
         // this should be the else branch then
-        if (this.type.type.equals("int")){
+        if (this.type.type.equals("int")) {
             expression1.codeGen(method);
             expression2.codeGen(method);
-            switch (name){
+            switch (name) {
                 case "+" -> method.visitInsn(Opcodes.IADD);
                 case "-" -> method.visitInsn(Opcodes.ISUB);
                 case "*" -> method.visitInsn(Opcodes.IMUL);
@@ -39,7 +39,7 @@ public class Binary extends Expression {
             Label trueLabel = new Label();
             Label falseLabel = new Label();
             //load first
-            switch (name){
+            switch (name) {
                 case "&&" -> {
                     expression1.codeGen(method);
                     method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
@@ -91,6 +91,14 @@ public class Binary extends Expression {
             ) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
+            } else if (name.equals("==") || name.equals("!=") || name.equals("<") || name.equals(">") || name.equals("<=") || name.equals(">=")) {
+                if (expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))) {
+                    type = expression1.typeCheck(localVars, clazz);
+                    return type;
+                } else {
+                    throw new TypeMismatchException("Types of Expressions does not match");
+                }
+
             } else {
                 throw new TypeMismatchException("Name does not match or expressions are from wrong Type");
             }
@@ -99,6 +107,7 @@ public class Binary extends Expression {
         }
 
     }
+
 
     @Override
     public String toString() {
