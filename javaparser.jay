@@ -80,9 +80,7 @@
 %type <Field> Field
 %type <Method> Method
 
-%type <Statements> Statements
-%type <Expressions> Expressions
-%type <Parameters> Parameters
+%type <List> Statements Expressions Parameters
 %%
 
 Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>());}
@@ -104,7 +102,7 @@ Expression          : SUPER {$$ = new Super();}
 					| INTLITERAL {$$ = new JInteger($1);}
 					| BOOLLITERAL {$$ = new Bool($1);}
 					| CHARLITERAL {$$ = new JChar($1);}
-					| STRINGLITERAL {$$ = new JString($1);} // ToDo: JString otr String?
+					| STRINGLITERAL {$$ = new JString($1);}
 					| NULLLITERAL {$$ = new JNull();}
 					| Stmtexprexpr {$$ = $1}
 
@@ -146,18 +144,21 @@ Assignment          : Localorfieldvar ASSIGN Expression { $$ = new Assignment($1
 New					: NEW Type LBRACKET Expressions RBRACKET { $$ = new New($2, $4); }
 
 Expressions			: Expression {
-						ArrayList<Expression> exprList = new ArrayList<>();
-						exprList.add($1);
-						$$ = exprList;
-					  }
-					| Expressions COMMA Expression {$1.add($3); $$ = $1;}
+						$$ = new ArrayList<Expression>(Arrays.asList($1));
+					}
+					| Expressions COMMA Expression {
+						$1.add($3); 
+						$$ = $1;
+					}
 
 Methodcall			: Expression DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall($1, $3, $5);}
 					| IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall(new This(), $1, $3);}
                     
 Statements          : Statement {
 						ArrayList<Statement> stmtList = new ArrayList<>(); 
-	      		  		stmtList.add($1);
+						if($1 != null)
+	      		  			stmtList.add($1);
+
 			  			$$ = stmtList;
  					}
                     | Statements Statement {
@@ -166,9 +167,9 @@ Statements          : Statement {
 						$$ = $1;
 					}
 
-Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new ifStmt($3, $5, null);}
+Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new If($3, $5, null);}
 
-Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new ifStmt($3, $5, new Statement($7));}
+Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new If($3, $5, $7);}
 
 Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
 
@@ -180,13 +181,12 @@ Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
 
 Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2);}
 
-Parameter			: Type IDENTIFIER { $$ = new Parameter($1, $2);}
-
-Parameters          : Parameters COMMA Parameter { 
-						// Todo Use Parameters class
+Parameters          : Parameters COMMA Localvardecleration { 
+						$1.add($3);
+						$$ = $1;
 					}
-                    | Parameter { 
-						// Todo Use Local Var 
+                    | Localvardecleration { 
+						$$ = new ArrayList<LocalVarDecl>(Arrays.asList($1));
 					}
 
 Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block { 
@@ -197,7 +197,7 @@ Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block {
 Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
                     | CLASS IDENTIFIER LBRACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
-FieldsAndMethods      : FieldsAndMethods Field { 
+FieldsAndMethods    : FieldsAndMethods Field {
 						$1.fieldDecl.add($2);
 						$$ = new Clazz(
 							"", new Type(""), 
