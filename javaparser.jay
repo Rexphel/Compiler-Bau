@@ -47,14 +47,14 @@
 %token COMMA
 
 %type <Statement> Statement
-%type <If> Ifthenstatement
-%type <If> Ifthenelsestatement
+%type <If> Ifthenstatement Ifthenelsestatement
 %type <While> Whilestatement
 %type <Block> Block
 %type <Statement> EmptyStatement
 %type <Return> Returnstatement
 %type <StmtExprStmt> Stmtexprstmt
 
+%type <Expression> Expression
 %type <LocalVarDecl> Localvardecleration
 %type <Instvar> Instvar
 %type <Unary> Unary
@@ -65,12 +65,11 @@
 %type <New> New
 %type <Methodcall> Methodcall
 
-%type <Clazz> Class
+%type <Clazz> Class FieldsAndMethods
 %type <Type> Type
 %type <Parameter> Parameter
 %type <Field> Field
 %type <Method> Method
-%type <Clazz> FieldsAndMethods
 
 %type <Statements> Statements
 %type <Expressions> Expressions
@@ -99,6 +98,8 @@ Expression          : SUPER {$$ = new Super($1);}
 					| STRINGLITERAL {$$ = new JString($1);} // ToDo: JString otr String?
 					| NULLLITERAL {$$ = new JNull($1);}
 					| Stmtexprexpr {$$ = $1}
+
+Emptystatement		: SEMICOLON { $$ = null}
 
 Stmtexpr			: Assignment {$$ = $1;}
 					| New {$$ = $1;}
@@ -149,8 +150,12 @@ Statements          : Statement {
 						ArrayList<Statement> stmtList = new ArrayList<>(); 
 	      		  		stmtList.add($1);
 			  			$$ = stmtList;
- 					  }
-                    | Statements Statement {$1.add($2); $$ = $1;}
+ 					}
+                    | Statements Statement {
+						if($2 != null)
+							$1.add($2); 
+						$$ = $1;
+					}
 
 Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new ifStmt($3, $5, null);}
 
