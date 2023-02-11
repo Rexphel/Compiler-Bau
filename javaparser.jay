@@ -1,11 +1,11 @@
-{-- Definition of global vars
+
 %{
     Class MiniJavaParser {
         public static void main(String[] args) {
             System.out.println("Hello World!");
         }
     }
-}%
+%}
 
 %token LBRACE
 %token RBRACE
@@ -50,12 +50,13 @@
 %type <If> Ifthenstatement Ifthenelsestatement
 %type <While> Whilestatement
 %type <Block> Block
-%type <Statement> EmptyStatement
+%type <Statement> Emptystatement
 %type <Return> Returnstatement
 %type <StmtExprStmt> Stmtexprstmt
 
 %type <Expression> Expression
 %type <LocalVarDecl> Localvardecleration
+%type <LocalOrFieldVar> Localorfieldvar
 %type <Instvar> Instvar
 %type <Unary> Unary
 %type <Binary> Binary
@@ -224,4 +225,3 @@ Type				: VOID {$$ = new Type($1)}
 					| INT {$$ = new Type($1)}
 
 %%
-}
