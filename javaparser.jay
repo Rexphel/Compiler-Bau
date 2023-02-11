@@ -51,7 +51,7 @@
 %type <int> INTLITERAL
 %type <char> CHARLITERAL
 
-%type <String> STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER
+%type <String> BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL
 
 %type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
@@ -183,15 +183,10 @@ Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2);}
 Parameter			: Type IDENTIFIER { $$ = new Parameter($1, $2);}
 
 Parameters          : Parameters COMMA Parameter { 
-						paramMap = new HashMap<String, Type>();
-						paramMap.putAll($1);
-						paramMap.put($4, $3);
-						$$ = paramMap;
+						// Todo Use Parameters class
 					}
                     | Parameter { 
-						paramMap = new HashMap<String, Type>();
-						paramMap.put($2, $1);
-						$$ = paramMap;
+						// Todo Use Local Var 
 					}
 
 Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block { 
@@ -230,5 +225,4 @@ Type				: VOID { $$ = new Type($1); }
 					| CHAR { $$ = new Type($1); }
 					| STRING { $$ = new Type($1); }
 					| INT { $$ = new Type($1); }
-
 %%
