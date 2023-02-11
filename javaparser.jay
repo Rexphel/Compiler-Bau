@@ -46,17 +46,35 @@
 %token DOT
 %token COMMA
 
-%type <If> Ifthenstatement Ifthenelsestatement
+%type <Statement> Statement
+%type <If> Ifthenstatement
+%type <If> Ifthenelsestatement
 %type <While> Whilestatement
 %type <Block> Block
-%type <LocalVarDecl> Localvardecleration
+%type <Statement> EmptyStatement
 %type <Return> Returnstatement
+%type <StmtExprStmt> Stmtexprstmt
+
+%type <LocalVarDecl> Localvardecleration
+%type <Instvar> Instvar
+%type <Unary> Unary
+%type <Binary> Binary
+%type <StmtExprExpr> Stmtexprexpr
 
 %type <Assign> Assignment
-%type <New> Newstmtexpr
+%type <New> New
 %type <Methodcall> Methodcall
-%type <Unary> Unary
-%type <List<Statement>> Statements
+
+%type <Clazz> Class
+%type <Type> Type
+%type <Parameter> Parameter
+%type <Field> Field
+%type <Method> Method
+%type <Clazz> FieldsAndMethods
+
+%type <Statements> Statements
+%type <Expressions> Expressions
+%type <Parameters> Parameters
 %%
 
 Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>())}
@@ -85,8 +103,6 @@ Expression          : SUPER {$$ = new Super($1);}
 Stmtexpr			: Assignment {$$ = $1;}
 					| New {$$ = $1;}
 					| Methodcall {$$ = $1;}
-					
-
 
 Localorfieldvar		: IDENTIFIER {$$ = new LocalOrFieldVar($1);}
 
