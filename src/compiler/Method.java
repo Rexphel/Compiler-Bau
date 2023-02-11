@@ -2,6 +2,7 @@ package compiler;
 
 import compiler.exception.TypeMismatchException;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.objectweb.asm.*;
 
@@ -49,11 +50,13 @@ public class Method implements TypedParserObject {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         //TODO: update local vars with the parameters
-        if (block.typeCheck(localVars, clazz).equals(type)) {
+        Map<String, Type> methodVars = new HashMap<>();
+        //Vars in MethodVars schreiben
+        if (block.typeCheck(methodVars, clazz).equals(type)) {
             return type;
         } else {
             throw new TypeMismatchException("Blocktype and function type missmatch");
-        }//Todo delete local variables from Map  - how about using a copy of the map instead of passing the same map down?
+        }
     }
 
     @Override

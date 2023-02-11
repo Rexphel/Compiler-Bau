@@ -11,7 +11,7 @@ public class If extends Statement {
 
     Expression condition;
     Statement statement; // IF
-    Statement maybeStatement; // Nicht in UML //TODO: was für maybe statement
+    Statement maybeStatement; // Nicht in UML
 
     public If(Expression condition, Statement statement, Statement mayStatement) {
         this.condition = condition;

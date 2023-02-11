@@ -39,9 +39,8 @@ public class Unary extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        //TODO: look into this again
         if (expression.typeCheck(localVars, clazz).equals(Type.INTEGER)
-                && "+*".contains(name)) {
+                && "+-".contains(name)) {
             type = expression.typeCheck(localVars, clazz);
             return type;
         } else if (name.equals("!")

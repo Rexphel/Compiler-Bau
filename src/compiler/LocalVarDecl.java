@@ -18,7 +18,7 @@ public class LocalVarDecl extends Statement {
 
     @Override
     public void codeGen(MethodVisitor method) {
-        if (initialValue != null){
+        if (initialValue != null) {
             int localIndex = 1; //TODO: get index from localVars
             initialValue.codeGen(method);
             method.visitVarInsn(Opcodes.ISTORE, localIndex); //TODO: we have more than Integer, what about Strings?
@@ -27,8 +27,12 @@ public class LocalVarDecl extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        localVars.put(name, type);
-        return type;
+        if ((initialValue.typeCheck(localVars, clazz).equals(type)) || initialValue == null) {
+            localVars.put(name, type);
+            return type;
+        } else {
+            throw new RuntimeException("initial Value does not equal type");
+        }
     }
 
     @Override
