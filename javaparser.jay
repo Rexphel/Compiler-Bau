@@ -1,65 +1,91 @@
-{-- Definition of global vars
+
 %{
-    Class MiniJavaParser {
+    class MiniJavaParser {
         public static void main(String[] args) {
             System.out.println("Hello World!");
         }
     }
-}%
+%}
 
 %token LBRACE
 %token RBRACE
 %token LBRACKET
 %token RBRACKET
-%token NOT
-%token PLUS
-%token MINUS
-%token MULTIPLY
-%token DIVIDE
-%token ASSIGN
-%token EQUAL
-%token NOTEQUAL
-%token GREATER
-%token GREATEREQUAL
-%token LESS
-%token LESSEQUAL
-%token IF
-%token ELSE
-%token WHILE
-%token SEMICOLON
-%token RETURN
-%token BOOLEAN
-%token INT
-%token CHAR
-%token STRING
-%token NULLLITERAL
-%token BOOLLITERAL
-%token INTLITERAL
-%token STRINGLITERAL
-%token CLASS
-%token NEW
-%token SUPER
-%token THIS
-%token VOID
-%token IDENTIFIER
-%token EOF
-%token DOT
-%token COMMA
+%token NOT 
+%token PLUS 
+%token MINUS 
+%token MULTIPLY 
+%token DIVIDE 
+%token ASSIGN 
+%token EQUAL 
+%token NOTEQUAL 
+%token GREATER 
+%token GREATEREQUAL 
+%token LESS 
+%token LESSEQUAL 
+%token IF 
+%token ELSE 
+%token WHILE 
+%token SEMICOLON 
+%token RETURN 
+%token BOOLEAN 
+%token INT 
+%token CHAR 
+%token STRING 
+%token NULLLITERAL 
+%token BOOLLITERAL 
+%token INTLITERAL 
+%token CHARLITERAL
+%token STRINGLITERAL 
+%token CLASS 
+%token NEW 
+%token SUPER 
+%token THIS 
+%token VOID 
+%token IDENTIFIER 
+%token EOF 
+%token DOT 
+%token COMMA 
+ 
+%type <boolean> BOOLLITERAL
+%type <int> INTLITERAL
+%type <char> CHARLITERAL
 
+%type <String> VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUAL NOTEQUAL GREATER GREATEREQUAL LESS LESSEQUAL
+
+%type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
 %type <While> Whilestatement
 %type <Block> Block
-%type <LocalVarDecl> Localvardecleration
+%type <Statement> Emptystatement
 %type <Return> Returnstatement
+%type <StmtExprStmt> Stmtexprstmt
 
-%type <Assign> Assignment
-%type <New> Newstmtexpr
-%type <Methodcall> Methodcall
+%type <Expression> Expression
+%type <LocalVarDecl> Localvardecleration
+%type <LocalOrFieldVar> Localorfieldvar
+%type <Instvar> Instvar
 %type <Unary> Unary
-%type <List<Statement>> Statements
+%type <Binary> Binary
+%type <StmtExprExpr> Stmtexprexpr
+
+%type <StmtExpr> Stmtexpr
+%type <Assign> Assignment
+%type <New> New
+%type <Methodcall> Methodcall
+
+%type <Clazz> Class FieldsAndMethods
+%type <Type> Type
+%type <Parameter> Parameter
+%type <Field> Field
+%type <Method> Method
+
+%type <Statements> Statements
+%type <Expressions> Expressions
+%type <Parameters> Parameters
 %%
 
-Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>())}
+Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>());}
                     | LBRACKET Statements  RBRACKET { $$ = new Block($2); }
 
 Statement           : Ifthenstatement {$$ = $1;}  
@@ -70,23 +96,23 @@ Statement           : Ifthenstatement {$$ = $1;}
                     | Returnstatement {$$ = $1;}
 					| Stmtexprstmt {$$ = $1}
 
-Expression          : SUPER {$$ = new Super($1);}
+Expression          : SUPER {$$ = new Super();}
 					| Localorfieldvar {$$ = $1;}
 					| Instvar {$$ = $1;}
 					| Unary {$$ = $1;}
 					| Binary {$$ = $1;}
 					| INTLITERAL {$$ = new JInteger($1);}
-					| BOOLLITERAL {$$ = new JBoolean($1);}
+					| BOOLLITERAL {$$ = new Bool($1);}
 					| CHARLITERAL {$$ = new JChar($1);}
 					| STRINGLITERAL {$$ = new JString($1);} // ToDo: JString otr String?
-					| NULLLITERAL {$$ = new JNull($1);}
+					| NULLLITERAL {$$ = new JNull();}
 					| Stmtexprexpr {$$ = $1}
+
+Emptystatement		: SEMICOLON { $$ = null;}
 
 Stmtexpr			: Assignment {$$ = $1;}
 					| New {$$ = $1;}
 					| Methodcall {$$ = $1;}
-					
-
 
 Localorfieldvar		: IDENTIFIER {$$ = new LocalOrFieldVar($1);}
 
@@ -95,8 +121,8 @@ Instvar				: Localorfieldvar DOT IDENTIFIER {$$ = new InstVar($1, $3);}
 Unary				: Unaryoperator Expression {$$ = new Unary($1, $2);}
 
 Unaryoperator		: NOT {$$ = $1;}
-					: MINUS {$$ = $1;}
-					: PLUS {$$ = $1;}
+					| MINUS {$$ = $1;}
+					| PLUS {$$ = $1;}
 
 Binary				: Expression Binaryoperator Expression {$$ = new Binary($2, $1, $3);}
 
@@ -117,14 +143,14 @@ Stmtexprstmt		: Stmtexpr SEMICOLON {new StmtExprStmt($1);}
 
 Assignment          : Localorfieldvar ASSIGN Expression { $$ = new Assignment($1, $3); }
 
-New					: NEW Type LBRACKET Expressions RIGHTBRACKET { $$ = new New($2, $4); }
+New					: NEW Type LBRACKET Expressions RBRACKET { $$ = new New($2, $4); }
 
 Expressions			: Expression {
 						ArrayList<Expression> exprList = new ArrayList<>();
 						exprList.add($1);
 						$$ = exprList;
 					  }
-					| Expressions COMMA Expression {$1.add($2); $$ = $1;}
+					| Expressions COMMA Expression {$1.add($3); $$ = $1;}
 
 Methodcall			: Expression DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall($1, $3, $5);}
 					| IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall(new This(), $1, $3);}
@@ -133,8 +159,12 @@ Statements          : Statement {
 						ArrayList<Statement> stmtList = new ArrayList<>(); 
 	      		  		stmtList.add($1);
 			  			$$ = stmtList;
- 					  }
-                    | Statements Statement {$1.add($2); $$ = $1;}
+ 					}
+                    | Statements Statement {
+						if($2 != null)
+							$1.add($2); 
+						$$ = $1;
+					}
 
 Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new ifStmt($3, $5, null);}
 
@@ -142,25 +172,21 @@ Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement 
 
 Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
 
-Block               : LBRACKET   RBRACKET { $$ = new Block(new ArrayList<Statement>()) }
-                    | LBRACKET  Statements  RBRACKET { $$ = new Block($2) }
-
-Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null) }
-                    | RETURN Expression  SEMICOLON { $$ = new Return($2)}
+Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null); }
+                    | RETURN Expression  SEMICOLON { $$ = new Return($2); }
 
 Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
                     | Type IDENTIFIER ASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
 
-Parameters         : Parameters COMMA Type IDENTIFIER { 
-						paramMap = new HashMap<String, Type>();
-						paramMap.putAll($1);
-						paramMap.put($4, $3);
-						$$ = paramMap;
+Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2);}
+
+Parameter			: Type IDENTIFIER { $$ = new Parameter($1, $2);}
+
+Parameters          : Parameters COMMA Parameter { 
+						// Todo Use Parameters class
 					}
-                    | Type IDENTIFIER { 
-						paramMap = new HashMap<String, Type>();
-						paramMap.put($2, $1);
-						$$ = paramMap;
+                    | Parameter { 
+						// Todo Use Local Var 
 					}
 
 Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block { 
@@ -168,35 +194,35 @@ Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block {
 					}
 					
 // ToDo: Does Clazz Class need the whole Statement string?
-Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new Field[]{}, new Method[]{}); }
-                    | CLASS IDENTIFIER LREACKET VarsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
+Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
+                    | CLASS IDENTIFIER LBRACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
 FieldsAndMethods      : FieldsAndMethods Field { 
+						$1.fieldDecl.add($2);
 						$$ = new Clazz(
 							"", new Type(""), 
-							new ArrayList<>($1.fieldDecl).add($2).toArray(new Field[$1.fieldDecl.length +1]),
+							$1.fieldDecl,
 							$1.methodDecl
 						);
 					}
                     | FieldsAndMethods Method { 
+						$1.methodDecl.add($2);
 						$$ = new Clazz(
 							"", new Type(""), 
 							$1.fieldDecl ,
-							new ArrayList<>($1.methodDecl).add($2).toArray(new Field[$1.methodDecl.length +1])
+							$1.methodDecl
 						);
 					}
                     | Field { 
-						$$ = new Clazz("", new Type(""), new Field[]{$1}, new Method[]{});
+						$$ = new Clazz("", new Type(""), new ArrayList<Field>(Arrays.asList($1)), new ArrayList<Field>());
 					}
                     | Method { 
-						$$ = new Clazz("", new Type(""), new Field[]{}, new Method[]{$1});
+						$$ = new Clazz("", new Type(""), new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList($1)));
 					}
 
-Type				: VOID {$$ = new Type($1)}
-					| BOOLEAN {$$ = new Type($1)}
-					| CHAR {$$ = new Type($1)}
-					| STRING {$$ = new Type($1)}
-					| INT {$$ = new Type($1)}
-
+Type				: VOID { $$ = new Type($1); }
+					| BOOLEAN { $$ = new Type($1); }
+					| CHAR { $$ = new Type($1); }
+					| STRING { $$ = new Type($1); }
+					| INT { $$ = new Type($1); }
 %%
-}
