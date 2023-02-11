@@ -11,40 +11,47 @@
 %token RBRACE
 %token LBRACKET
 %token RBRACKET
-%token NOT
-%token PLUS
-%token MINUS
-%token MULTIPLY
-%token DIVIDE
-%token ASSIGN
-%token EQUAL
-%token NOTEQUAL
-%token GREATER
-%token GREATEREQUAL
-%token LESS
-%token LESSEQUAL
-%token IF
-%token ELSE
-%token WHILE
-%token SEMICOLON
-%token RETURN
-%token BOOLEAN
-%token INT
-%token CHAR
-%token STRING
-%token NULLLITERAL
-%token BOOLLITERAL
-%token INTLITERAL
-%token STRINGLITERAL
-%token CLASS
-%token NEW
-%token SUPER
-%token THIS
-%token VOID
-%token IDENTIFIER
-%token EOF
-%token DOT
-%token COMMA
+%token NOT 
+%token PLUS 
+%token MINUS 
+%token MULTIPLY 
+%token DIVIDE 
+%token ASSIGN 
+%token EQUAL 
+%token NOTEQUAL 
+%token GREATER 
+%token GREATEREQUAL 
+%token LESS 
+%token LESSEQUAL 
+%token IF 
+%token ELSE 
+%token WHILE 
+%token SEMICOLON 
+%token RETURN 
+%token BOOLEAN 
+%token INT 
+%token CHAR 
+%token STRING 
+%token NULLLITERAL 
+%token BOOLLITERAL 
+%token INTLITERAL 
+%token CHARLITERAL
+%token STRINGLITERAL 
+%token CLASS 
+%token NEW 
+%token SUPER 
+%token THIS 
+%token VOID 
+%token IDENTIFIER 
+%token EOF 
+%token DOT 
+%token COMMA 
+ 
+%type <boolean> BOOLLITERAL
+%type <int> INTLITERAL
+%type <char> CHARLITERAL
+
+%type <String> STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER
 
 %type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
@@ -62,6 +69,7 @@
 %type <Binary> Binary
 %type <StmtExprExpr> Stmtexprexpr
 
+%type <StmtExpr> Stmtexpr
 %type <Assign> Assignment
 %type <New> New
 %type <Methodcall> Methodcall
@@ -94,10 +102,10 @@ Expression          : SUPER {$$ = new Super($1);}
 					| Unary {$$ = $1;}
 					| Binary {$$ = $1;}
 					| INTLITERAL {$$ = new JInteger($1);}
-					| BOOLLITERAL {$$ = new JBoolean($1);}
+					| BOOLLITERAL {$$ = new Bool($1);}
 					| CHARLITERAL {$$ = new JChar($1);}
 					| STRINGLITERAL {$$ = new JString($1);} // ToDo: JString otr String?
-					| NULLLITERAL {$$ = new JNull($1);}
+					| NULLLITERAL {$$ = new JNull();}
 					| Stmtexprexpr {$$ = $1}
 
 Emptystatement		: SEMICOLON { $$ = null}
@@ -195,7 +203,7 @@ Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block {
 					
 // ToDo: Does Clazz Class need the whole Statement string?
 Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
-                    | CLASS IDENTIFIER LREACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
+                    | CLASS IDENTIFIER LBRACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
 FieldsAndMethods      : FieldsAndMethods Field { 
 						$$ = new Clazz(
