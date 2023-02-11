@@ -113,8 +113,8 @@ Instvar				: Localorfieldvar DOT IDENTIFIER {$$ = new InstVar($1, $3);}
 Unary				: Unaryoperator Expression {$$ = new Unary($1, $2);}
 
 Unaryoperator		: NOT {$$ = $1;}
-					: MINUS {$$ = $1;}
-					: PLUS {$$ = $1;}
+					| MINUS {$$ = $1;}
+					| PLUS {$$ = $1;}
 
 Binary				: Expression Binaryoperator Expression {$$ = new Binary($2, $1, $3);}
 
