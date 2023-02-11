@@ -1,6 +1,6 @@
 jaooyExe = linux-gnu
 
-Scanner.class: Scanner.java
+Scanner.class: Scanner.java javaparser.class
 	javac ./build/Scanner.java
 Scanner.java: Scanner
 	java -cp JLex2.jar JLex2.Main Scanner; mv Scanner.java ./build
@@ -14,7 +14,7 @@ javaparser.class: javaparser.java
 Scanner.class: Scanner.java
 	cd ./build; javac Scanner.java
 
-Main.class: Scanner.class javaparser.class
+Main.class: javaparser.class
 	cp Main.java ./build; cd ./build; javac Main.java
 
 javafiles.txt:
