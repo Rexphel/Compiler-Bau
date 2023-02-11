@@ -167,13 +167,17 @@ Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null) }
 Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
                     | Type IDENTIFIER ASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
 
-Parameters         : Parameters COMMA Type IDENTIFIER { 
+Localvardecleration : Type IDENTIFIER ( $$ = new LocalVarDecl($1, $2))
+
+Parameter			: Type IDENTIFIER { $$ = new Parameter($1, $2)}
+
+Parameters          : Parameters COMMA Parameter { 
 						paramMap = new HashMap<String, Type>();
 						paramMap.putAll($1);
 						paramMap.put($4, $3);
 						$$ = paramMap;
 					}
-                    | Type IDENTIFIER { 
+                    | Parameter { 
 						paramMap = new HashMap<String, Type>();
 						paramMap.put($2, $1);
 						$$ = paramMap;
@@ -184,13 +188,13 @@ Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block {
 					}
 					
 // ToDo: Does Clazz Class need the whole Statement string?
-Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new Field[]{}, new Method[]{}); }
-                    | CLASS IDENTIFIER LREACKET VarsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
+Class               : CLASS IDENTIFIER LBRACKET RBRACKET { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
+                    | CLASS IDENTIFIER LREACKET FieldsAndMethods RBRACKET { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
 FieldsAndMethods      : FieldsAndMethods Field { 
 						$$ = new Clazz(
 							"", new Type(""), 
-							new ArrayList<>($1.fieldDecl).add($2).toArray(new Field[$1.fieldDecl.length +1]),
+							new ArrayList<>($1.fieldDecl.add($2)),
 							$1.methodDecl
 						);
 					}
@@ -198,14 +202,14 @@ FieldsAndMethods      : FieldsAndMethods Field {
 						$$ = new Clazz(
 							"", new Type(""), 
 							$1.fieldDecl ,
-							new ArrayList<>($1.methodDecl).add($2).toArray(new Field[$1.methodDecl.length +1])
+							new ArrayList<>($1.methodDecl.add($2))
 						);
 					}
                     | Field { 
-						$$ = new Clazz("", new Type(""), new Field[]{$1}, new Method[]{});
+						$$ = new Clazz("", new Type(""), new ArrayList<Field>(Arrays.asList($1)), new ArrayList<Field>());
 					}
                     | Method { 
-						$$ = new Clazz("", new Type(""), new Field[]{}, new Method[]{$1});
+						$$ = new Clazz("", new Type(""), new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList($1)));
 					}
 
 Type				: VOID {$$ = new Type($1)}
