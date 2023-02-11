@@ -1,21 +1,9 @@
 %%
-%{
-public static void main(String args[]) throws java.io.IOException {
-    JavaLexer b = new JavaLexer (new java.io.InputStreamReader(System.in));
-    Token return = b.lexreader();
-    while (return != Token.EOF) {
-    System.out.println(return);
-    return = b.lexreader();
-    }
-  }
-%}
-%%
 
 %public
-%jayscanner JavaScanner
+%jayscanner javascanner
 %jayparser Statement_Parser
-%class javalexer
-%function lexreader()
+%class Scanner
 
 %eofval{
     return new EOF();
@@ -60,8 +48,8 @@ true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
 "class" {System.out.print(yytext()); return new CLASS(yytext());}
 "new" {System.out.print(yytext()); return new NEW(yytext());}
 "super" {System.out.print(yytext()); return new SUPER(yytext());}
-"this" {System.out.print(yytext()); return new THIS(yytext));}
-"void" {System.out.print(yytext()); return new VOID(yytext));}
+"this" {System.out.print(yytext()); return new THIS(yytext());}
+"void" {System.out.print(yytext()); return new VOID(yytext());}
 [a-zA-Z_][0-9a-zA-Z_]* {System.out.print(yytext()); return new IDENTIFIER(yytext());}
 
 if {System.out.print(yytext()); return new IF(yytext());}
