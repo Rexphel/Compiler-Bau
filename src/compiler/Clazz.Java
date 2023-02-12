@@ -74,12 +74,17 @@ public class Clazz implements TypedParserObject {
 
     }
 
-    // TODO: Set clazz in general main of compiler, not here.
+    // TODO: Set clazz in general main of compiler, not here. (Maybe)
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+
+        // TODO: Differentiate between localVars and clazz's fieldDecl
+
+        clazz = this;
         List<TypedParserObject> l = new ArrayList<>(fieldDecl);
         l.addAll(methodDecl);
-        l.forEach(obj -> obj.typeCheck(localVars, clazz));
+        Clazz finalClazz = clazz; // IntelliJ wants it that way
+        l.forEach(obj -> obj.typeCheck(localVars, finalClazz));
         return Type.VOID;
 //        type = Type.VOID;
 //        return type;

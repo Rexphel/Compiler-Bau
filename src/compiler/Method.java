@@ -49,9 +49,8 @@ public class Method implements TypedParserObject {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        //TODO: update local vars with the parameters
-        Map<String, Type> methodVars = new HashMap<>();
-        //Vars in MethodVars schreiben
+        Map<String, Type> methodVars = new HashMap<>(parameters);
+        methodVars.putAll(localVars);
         if (block.typeCheck(methodVars, clazz).equals(type)) {
             return type;
         } else {
