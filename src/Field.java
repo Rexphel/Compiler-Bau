@@ -33,7 +33,7 @@ public class Field implements TypedParserObject {
         if (b) {
             throw new RuntimeException("Field already exists");
         }
-        if (initialValue.typeCheck(localVars, clazz).equals(type) || initialValue == null) {
+        if (initialValue == null ||  initialValue.typeCheck(localVars, clazz).equals(type) ) {
             return type;
         } else {
             throw new RuntimeException("Initial value does not equal type");

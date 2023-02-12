@@ -5,7 +5,11 @@ class Main {
         MiniJavaParser parser = new MiniJavaParser();
 
         try {
-            parser.yyparse(scanner);
+            Clazz clazz = (Clazz) parser.yyparse(scanner);
+            System.out.println(clazz.toString());
+            clazz.typeCheck();
+            byte[] bytecode = clazz.codeGen();
+            // TODO write to file
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,12 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.*;
 
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 
-public class Clazz implements TypedParserObject {
+public class Clazz {
 
     Type name;
     //Field[] fieldDecl;
@@ -21,7 +22,7 @@ public class Clazz implements TypedParserObject {
         this.methodDecl = methodDecl;
     }
 
-    public void codeGen() {
+    public byte[] codeGen() {
         //we probably want to instantiate the cw in the Main class
         ClassWriter cw = new ClassWriter( ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         cw. visit(
@@ -70,16 +71,15 @@ public class Clazz implements TypedParserObject {
 
         cw.visitEnd();
 
+        return cw.toByteArray();
+
     }
 
-    // TODO: We may not want to override a typecheck function here. Instead declare a new without the Clazz parameter and void return type
-    @Override
-    public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        clazz = this;
+    public Type typeCheck() {
+
         List<TypedParserObject> l = new ArrayList<>(fieldDecl);
-        l.addAll(methodDecl);
-        Clazz finalClazz = clazz; // IntelliJ wants it that way
-        l.forEach(obj -> obj.typeCheck(localVars, finalClazz));
+        l.addAll(methodDecl);// IntelliJ wants it that way
+        l.forEach(obj -> obj.typeCheck(new HashMap<>(), this));
         return Type.VOID;
     }
 
