@@ -28,6 +28,8 @@ movefiles: javafiles
 	mkdir -p build
 	mv ./src/*.class ./build
 
+rebuild:
+	make clean && make
 
 clean:
-	rm ./build/*
+	rm ./build/* javafiles.txt

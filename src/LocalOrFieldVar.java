@@ -17,15 +17,14 @@ public class LocalOrFieldVar extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        //TODO: here we need the localvars,
-        //suche nach field -> GETFIELD
-        // ansonsten aload ?
-        if (true /*is LocalVar*/) {
-            int localIndex = 1; //TODO: get index from localvars List
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        List<LocalVarDecl> local = localVars.stream().filter(localVarDecl -> localVarDecl.name.equals(name)).toList();
+        List<Field> field = clazz.fieldDecl.stream().filter(field1 -> field1.name.equals(name)).toList();
+        if (!local.isEmpty()) {
+            int localIndex = localVars.indexOf(local.get(0));
             method.visitVarInsn(Opcodes.ILOAD, localIndex);
-        } else if (true /*is Field*/) {
-
+        } else if (!field.isEmpty()) {
+            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, null); // TODO: descriptor
         }
     }
 

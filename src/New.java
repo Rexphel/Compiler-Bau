@@ -15,8 +15,8 @@ public class New extends StmtExpr {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        //TODO: we only want to call the constructor of this class if possible
     }
 
     @Override

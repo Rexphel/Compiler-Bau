@@ -2,6 +2,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class Binary extends Expression {
@@ -18,13 +19,13 @@ public class Binary extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         // TODO: we want another if branch before, where the different compare operations are handled
 
         // this should be the else branch then
         if (this.type.type.equals("int")) {
-            expression1.codeGen(method);
-            expression2.codeGen(method);
+            expression1.codeGen(method, clazz, localVars);
+            expression2.codeGen(method,clazz, localVars);
             switch (name) {
                 case "+" -> method.visitInsn(Opcodes.IADD);
                 case "-" -> method.visitInsn(Opcodes.ISUB);
@@ -38,16 +39,16 @@ public class Binary extends Expression {
             //load first
             switch (name) {
                 case "&&" -> {
-                    expression1.codeGen(method);
+                    expression1.codeGen(method, clazz, localVars);
                     method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
-                    expression2.codeGen(method);
+                    expression2.codeGen(method, clazz, localVars);
                     method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
                     method.visitJumpInsn(Opcodes.GOTO, trueLabel);
                 }
                 case "||" -> {
-                    expression1.codeGen(method);
+                    expression1.codeGen(method, clazz, localVars);
                     method.visitJumpInsn(Opcodes.IFNE, trueLabel);
-                    expression2.codeGen(method);
+                    expression2.codeGen(method, clazz, localVars);
                     method.visitJumpInsn(Opcodes.IFNE, trueLabel);
                     method.visitJumpInsn(Opcodes.GOTO, falseLabel);
                 }

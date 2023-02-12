@@ -13,9 +13,9 @@ public class Block extends Statement {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         for (Statement statement : statements) {
-            statement.codeGen(method);
+            statement.codeGen(method, clazz, localVars);
         }
 
     }

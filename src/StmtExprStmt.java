@@ -1,5 +1,6 @@
 import org.objectweb.asm.MethodVisitor;
 
+import java.util.List;
 import java.util.Map;
 
 public class StmtExprStmt extends Statement {
@@ -13,8 +14,8 @@ public class StmtExprStmt extends Statement {
 
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        statementExpression.codeGen(method);
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        statementExpression.codeGen(method, clazz, localVars);
     }
 
     @Override

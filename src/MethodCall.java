@@ -11,7 +11,7 @@ public class MethodCall extends StmtExpr {
     List<Expression> parameterList;
 
     public MethodCall(Expression expression, String methodName, List<Expression> parameterList) {
-        // TODO: Do Something with expression maybe?
+        this.objectExpr = expression;
         this.methodName = methodName;
         this.parameterList = parameterList;
     }
@@ -19,19 +19,22 @@ public class MethodCall extends StmtExpr {
 
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         //objectExpr should always be this, therefore:
-        objectExpr.codeGen(method);
+        objectExpr.codeGen(method, clazz, localVars);
 
         for (Expression expression : parameterList) {
-            expression.codeGen(method);
+            expression.codeGen(method, clazz, localVars);
         }
-        method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, ""/*TODO class name*/, methodName, ""/*todo: with clazz and methodname get methodSignature (getMethodSignature)*/, false );
+        List<Method> methods = clazz.methodDecl.stream().filter(method1 -> method1.name.equals(methodName)).toList();
+        String methodSignature = methods.get(0).getTypeSignature();
+        method.visitMethodInsn(Opcodes.INVOKEVIRTUAL, clazz.name.type, methodName, methodSignature, false );
 
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        // TODO: objectExpr darf nur this sein
         return clazz.methodDecl.stream()
                 .filter(method -> method.name.equals(methodName))
                 .map(method -> method.type)

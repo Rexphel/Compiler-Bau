@@ -52,7 +52,7 @@ public class Clazz implements TypedParserObject {
         for (Field field : fieldDecl) {
             if (field.initialValue != null){
                 constructor.visitVarInsn(Opcodes.ALOAD, 0);
-                field.initialValue.codeGen(constructor);
+                field.initialValue.codeGen(constructor, this, new ArrayList<>());
                 constructor.visitFieldInsn(Opcodes.PUTFIELD, this.name.type, field.name, field.type.getTypeLiteral() );
             }
         }
@@ -64,7 +64,7 @@ public class Clazz implements TypedParserObject {
 
         //methods
         for(Method m : methodDecl) {
-            m.codeGen(cw);
+            m.codeGen(cw, this);
         }
 
 
@@ -72,20 +72,15 @@ public class Clazz implements TypedParserObject {
 
     }
 
-    // TODO: Set clazz in general main of compiler, not here. (Maybe)
+    // TODO: We may not want to override a typecheck function here. Instead declare a new without the Clazz parameter and void return type
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-
-        // TODO: Differentiate between localVars and clazz's fieldDecl
-
         clazz = this;
         List<TypedParserObject> l = new ArrayList<>(fieldDecl);
         l.addAll(methodDecl);
         Clazz finalClazz = clazz; // IntelliJ wants it that way
         l.forEach(obj -> obj.typeCheck(localVars, finalClazz));
         return Type.VOID;
-//        type = Type.VOID;
-//        return type;
     }
 
     @Override

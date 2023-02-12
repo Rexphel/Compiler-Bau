@@ -2,6 +2,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class Unary extends Expression {
@@ -16,13 +17,13 @@ public class Unary extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        expression.codeGen(method);
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        expression.codeGen(method, clazz, localVars);
         if (name.equals("-")){
             method.visitInsn(Opcodes.INEG);
         }
         else if (name.equals("!")){
-            //TODO: we may have to do something with visitFrame here, because of the jump
+            // TODO: we may have to do something with visitFrame here, because of the jump
             Label endLabel = new Label();
             Label falseLabel = new Label();
             method.visitJumpInsn(Opcodes.IFNE, falseLabel);

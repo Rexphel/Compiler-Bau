@@ -1,5 +1,6 @@
 import org.objectweb.asm.MethodVisitor;
 
+import java.util.List;
 import java.util.Map;
 
 public class JString extends Expression {
@@ -11,7 +12,7 @@ public class JString extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
 
     }
 
