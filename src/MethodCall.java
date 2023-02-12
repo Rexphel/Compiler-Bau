@@ -10,7 +10,8 @@ public class MethodCall extends StmtExpr {
     String methodName;
     List<Expression> parameterList;
 
-    public MethodCall( String methodName, List<Expression> parameterList) {
+    public MethodCall(Expression expression, String methodName, List<Expression> parameterList) {
+        // TODO: Do Something with expression maybe?
         this.methodName = methodName;
         this.parameterList = parameterList;
     }

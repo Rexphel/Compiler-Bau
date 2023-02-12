@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Map;
 import org.objectweb.asm.*;
 
@@ -5,11 +6,11 @@ public class Method implements TypedParserObject {
     
     String name;
     Type type;
-    Map<String, Type> parameters;
+    List<LocalVarDecl> parameters;
     Statement block;
 
 
-    public Method(String name, Type type, Map<String, Type> parameters, Statement block) {
+    public Method(String name, Type type, List<LocalVarDecl> parameters, Statement block) {
         this.name = name;
         this.type = type;
         this.parameters = parameters;
@@ -34,9 +35,7 @@ public class Method implements TypedParserObject {
 
     public String getTypeSignature(){
         StringBuilder signature = new StringBuilder("(");
-        for (Type value : parameters.values()) {
-            signature.append(value.getTypeLiteral());
-        }
+        parameters.stream().map(x -> x.type.getTypeLiteral()).forEach(signature::append);
         signature.append(")");
         signature.append(this.type.getTypeLiteral());
         return signature.toString();

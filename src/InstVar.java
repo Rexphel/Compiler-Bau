@@ -3,13 +3,13 @@ import org.objectweb.asm.MethodVisitor;
 import java.util.List;
 import java.util.Map;
 
-public class Instvar extends Expression {
+public class InstVar extends Expression {
 
     Expression expression;
     String name;
 
 
-    public Instvar(Expression expression, String name) {
+    public InstVar(Expression expression, String name) {
         this.expression = expression;
         this.name = name;
     }

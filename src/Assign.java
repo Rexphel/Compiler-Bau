@@ -5,11 +5,12 @@ import java.util.Map;
 
 public class Assign extends StmtExpr {
 
-    String varName; // ?Todo frage für Prof muss das nicht ein expression sein
+    String varName; // ?TODO: Remove
+    LocalOrFieldVar var; // TODO Make this an expression
     Expression expression;
 
-    public Assign(String varName, Expression expression) {
-        this.varName = varName;
+    public Assign(LocalOrFieldVar var, Expression expression) {
+        this.var = var;
         this.expression = expression;
     }
 
