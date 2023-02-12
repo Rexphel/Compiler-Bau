@@ -29,6 +29,7 @@ ws = [ \t\r\n\b\015]+
 ")" {System.out.print(yytext()); return new RBRACKET(yytext());}
 "{" {System.out.print(yytext()); return new LBRACE(yytext());}
 "}" {System.out.print(yytext()); return new RBRACE(yytext());}
+"," {System.out.print(yytext()); return new COMMA(yytext());}
 ";" {System.out.print(yytext()); return new SEMICOLON(yytext());}
 "." {System.out.print(yytext()); return new DOT(yytext());}
 
@@ -55,6 +56,7 @@ ws = [ \t\r\n\b\015]+
 true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
 [1-9][0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
 \".*\" {System.out.print(yytext()); return new STRINGLITERAL(yytext());}
+\'.*\' {System.out.print(yytext()); return new CHARLITERAL(yytext());}
 
 "class" {System.out.print(yytext()); return new CLASS(yytext());}
 "new" {System.out.print(yytext()); return new NEW(yytext());}
