@@ -1,0 +1,4 @@
+class test {
+    int i;
+
+}

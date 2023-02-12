@@ -1,7 +1,7 @@
 jaooyExe = linux-gnu
 
 Main.class: Scanner.class
-	cp Main.java ./build; cd ./build; javac Main.java
+	cp Main.java ./build; cd ./build; javac -cp "../asm-9.2.jar:." Main.java
 
 Scanner.class: Scanner.java javaparser.class
 	javac ./build/Scanner.java
@@ -22,7 +22,7 @@ javafiles.txt:
 	cd ./src; /usr/bin/find . -name "*.java" > ../javafiles.txt
 
 javafiles: javafiles.txt
-	cd ./src; javac -cp ../asm-9.2.jar @../javafiles.txt
+	cd ./src; javac -encoding iso-8859-1 -cp ../asm-9.2.jar @../javafiles.txt
 
 movefiles: javafiles
 	mkdir -p build
@@ -33,3 +33,6 @@ rebuild:
 
 clean:
 	rm ./build/* javafiles.txt
+
+compileTest: Main.class
+	 java -cp "asm-9.2.jar:./build" Main < test.java
