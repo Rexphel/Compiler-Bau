@@ -9,20 +9,17 @@ public class Field implements TypedParserObject {
     Type type;
     Expression initialValue;
 
-
     public Field(String name, Type type, Expression initialValue) {
         this.name = name;
         this.type = type;
         this.initialValue = initialValue;
     }
 
-
     public void codeGen(ClassWriter cw) {
         FieldVisitor field = cw.visitField(0, name, type.getTypeLiteral(), null, null);
         field.visitEnd();
         //initialValue is handled by the constructor in Clazz
     }
-
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
@@ -36,7 +33,7 @@ public class Field implements TypedParserObject {
         if (b) {
             throw new RuntimeException("Field already exists");
         }
-        if (initialValue.typeCheck(localVars, clazz).equals(type)|| initialValue == null) {
+        if (initialValue.typeCheck(localVars, clazz).equals(type) || initialValue == null) {
             return type;
         } else {
             throw new RuntimeException("Initial value does not equal type");

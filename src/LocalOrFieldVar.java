@@ -1,9 +1,12 @@
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LocalOrFieldVar extends Expression {
 
@@ -18,21 +21,26 @@ public class LocalOrFieldVar extends Expression {
         //TODO: here we need the localvars,
         //suche nach field -> GETFIELD
         // ansonsten aload ?
-        if (true /*is LocalVar*/){
+        if (true /*is LocalVar*/) {
             int localIndex = 1; //TODO: get index from localvars List
             method.visitVarInsn(Opcodes.ILOAD, localIndex);
-        } else if (true /*is Field*/){
+        } else if (true /*is Field*/) {
 
         }
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        Set<Map.Entry<String, Type>> set = localVars.entrySet().stream().filter(stringTypeEntry -> stringTypeEntry.getKey().equals(name)).collect(Collectors.toSet());
-        if (set.isEmpty()) {
-            throw new RuntimeException("no Variable found");
+        type = localVars.get(name);
+        if (type == null) {
+            List<Field> fieldVars = clazz.fieldDecl.stream().filter(item -> item.name.equals(name)).toList();
+            if (fieldVars.isEmpty()) {
+                throw new RuntimeException("Fieldvar is not found");
+            } else {
+                //Typ von ersten gefundenen Variablen
+                return type = fieldVars.stream().findFirst().get().type;
+            }
         } else {
-            type = localVars.get(name);
             return type;
         }
     }
