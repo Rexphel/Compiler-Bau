@@ -1,21 +1,9 @@
 %%
-%{
-public static void main(String args[]) throws java.io.IOException {
-    JavaLexer b = new JavaLexer (new java.io.InputStreamReader(System.in));
-    Token return = b.lexreader();
-    while (return != Token.EOF) {
-    System.out.println(return);
-    return = b.lexreader();
-    }
-  }
-%}
-%%
 
 %public
-%jayscanner JavaScanner
-%jayparser Statement_Parser
-%class javalexer
-%function lexreader()
+%jayscanner javascanner
+%jayparser MiniJavaParser
+%class Scanner
 
 %eofval{
     return new EOF();
@@ -38,7 +26,7 @@ ws = [ \t\r\n\b\015]+
 "*" {System.out.print(yytext()); return new MULTIPLY(yytext());}
 "/" {System.out.print(yytext()); return new DIVIDE(yytext());}
 
-"=" {System.out.print(yytext()); return new ASSIGN(yytext());}
+"=" {System.out.print(yytext()); return new JASSIGN(yytext());}
 "!" {System.out.print(yytext()); return new NOT(yytext());}
 "==" {System.out.print(yytext()); return new EQUALS(yytext());}
 "!=" {System.out.print(yytext()); return new NOTEQUAL(yytext());}
@@ -59,10 +47,10 @@ true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
 \'.*\' {System.out.print(yytext()); return new CHARLITERAL(yytext());}
 
 "class" {System.out.print(yytext()); return new CLASS(yytext());}
-"new" {System.out.print(yytext()); return new NEW(yytext());}
-"super" {System.out.print(yytext()); return new SUPER(yytext());}
-"this" {System.out.print(yytext()); return new THIS(yytext));}
-"void" {System.out.print(yytext()); return new VOID(yytext));}
+"new" {System.out.print(yytext()); return new JNEW(yytext());}
+"super" {System.out.print(yytext()); return new JSUPER(yytext());}
+"this" {System.out.print(yytext()); return new JTHIS(yytext());}
+"void" {System.out.print(yytext()); return new VOID(yytext());}
 [a-zA-Z_][0-9a-zA-Z_]* {System.out.print(yytext()); return new IDENTIFIER(yytext());}
 
 if {System.out.print(yytext()); return new IF(yytext());}
