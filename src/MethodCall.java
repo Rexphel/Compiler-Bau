@@ -32,8 +32,6 @@ public class MethodCall extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        parameterList.forEach(x -> localVars.put("ABC" /*TODO NAME*/, x.type));
-
         return clazz.methodDecl.stream()
                 .filter(method -> method.name.equals(methodName))
                 .map(method -> method.type)
