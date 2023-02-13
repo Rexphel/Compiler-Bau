@@ -9,7 +9,7 @@
 
 3. Run `make`. This compiles the program and creates necessary files.
 
-4. Run `java Main < YOUR_FILE_HERE.java` in order to run a custom Java class
+4. Run `java -cp "asm-9.2.jar:./build" Main < YOUR_FILE_HERE.java` in order to run a custom Java class
 
 ## Contributors
 
