@@ -22,11 +22,11 @@
 %token GREATEROREQUAL
 %token LESS 
 %token LESSOREQUAL
-%token IF 
+%token JIF
 %token ELSE 
-%token WHILE 
+%token JWHILE
 %token SEMICOLON 
-%token RETURN 
+%token JRETURN
 %token BOOLEAN 
 %token INT 
 %token CHAR 
@@ -43,13 +43,9 @@
 %token VOID 
 %token IDENTIFIER
 %token DOT 
-%token COMMA 
- 
-%type <boolean> BOOLLITERAL
-%type <int> INTLITERAL
-%type <char> CHARLITERAL
+%token COMMA
 
-%type <String> VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
+%type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
 
 %type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
@@ -57,15 +53,15 @@
 %type <Block> Block
 %type <Statement> Emptystatement
 %type <Return> Returnstatement
-%type <StmtExprStmt> Stmtexprstmt
+%type <Statement> Stmtexprstmt
 
 %type <Expression> Expression
 %type <LocalVarDecl> Localvardecleration
 %type <LocalOrFieldVar> Localorfieldvar
 %type <InstVar> InstVar
-%type <Unary> Unary
-%type <Binary> Binary
-%type <StmtExprExpr> Stmtexprexpr
+%type <Unary> JUnary
+%type <Binary> JBinary
+%type <Expression> Stmtexprexpr
 
 %type <StmtExpr> Stmtexpr
 %type <Assign> assign
@@ -74,7 +70,6 @@
 
 %type <Clazz> Class FieldsAndMethods
 %type <Type> Type
-%type <Parameter> Parameter
 %type <Field> Field
 %type <Method> Method
 
@@ -84,12 +79,13 @@
 Class               : CLASS IDENTIFIER LBRACE RBRACE { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
                     | CLASS IDENTIFIER LBRACE FieldsAndMethods RBRACE { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
-Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>());}
-                    | LBRACKET Statements  RBRACKET { $$ = new Block($2); }
+Block               : LBRACE RBRACE{ $$ = new Block(new ArrayList<Statement>());}
+                    | LBRACE Statements  RBRACE { $$ = new Block($2); }
 
 Statement           : Ifthenstatement {$$ = $1;}
                     | Ifthenelsestatement {$$ = $1;}
                     | Whilestatement {$$ = $1;}
+					| Localvardecleration {$$ = $1;}
                     | Block {$$ = $1;}
                     | Emptystatement {$$ = $1;}
                     | Returnstatement {$$ = $1;}
@@ -98,13 +94,16 @@ Statement           : Ifthenstatement {$$ = $1;}
 Expression          : JSUPER {$$ = new Super();}
 					| Localorfieldvar {$$ = $1;}
 					| InstVar {$$ = $1;}
-					| Unary {$$ = $1;}
-					| Binary {$$ = $1;}
-					| INTLITERAL {$$ = new JInteger($1);}
-					| BOOLLITERAL {$$ = new Bool($1);}
-					| CHARLITERAL {$$ = new JChar($1);}
+					| JUnary {$$ = $1;}
+					| JBinary {$$ = $1;}
+					| INTLITERAL {$$ = new JInteger(Integer.parseInt($1));}
+					| BOOLLITERAL {
+						$$ = new Bool(Boolean.parseBoolean($1));
+					   }
+					| CHARLITERAL {$$ = new JChar($1.charAt(1));}
 					| STRINGLITERAL {$$ = new JString($1);}
 					| NULLLITERAL {$$ = new JNull();}
+					| JTHIS {$$ = new This();}
 					| Stmtexprexpr {$$ = $1;}
 
 Emptystatement		: SEMICOLON { $$ = null;}
@@ -117,13 +116,13 @@ Localorfieldvar		: IDENTIFIER {$$ = new LocalOrFieldVar($1);}
 
 InstVar				: Localorfieldvar DOT IDENTIFIER {$$ = new InstVar($1, $3);}
 
-Unary				: Unaryoperator Expression {$$ = new Unary($1, $2);}
+JUnary				: Unaryoperator Expression {$$ = new Unary($1, $2);}
 
 Unaryoperator		: NOT {$$ = $1;}
 					| MINUS {$$ = $1;}
 					| PLUS {$$ = $1;}
 
-Binary				: Expression Binaryoperator Expression {$$ = new Binary($2, $1, $3);}
+JBinary				: Expression Binaryoperator Expression {$$ = new Binary($2, $1, $3);}
 
 Binaryoperator		: PLUS {$$ = $1;}
 					| MINUS {$$ = $1;}
@@ -136,13 +135,14 @@ Binaryoperator		: PLUS {$$ = $1;}
 					| LESS {$$ = $1;}
 					| LESSOREQUAL {$$ = $1;}
 
-Stmtexprexpr		: Stmtexpr {new StmtExprExpr($1);}
+Stmtexprexpr		: Stmtexpr {$$ = new StmtExprExpr($1);}
 
-Stmtexprstmt		: Stmtexpr SEMICOLON {new StmtExprStmt($1);}
+Stmtexprstmt		: Stmtexpr SEMICOLON {$$ = new StmtExprStmt($1);}
 
 assign              : Localorfieldvar JASSIGN Expression { $$ = new Assign($1, $3); }
 
 New					: JNEW Type LBRACKET Expressions RBRACKET { $$ = new New($2, $4); }
+					| JNEW Type LBRACKET RBRACKET { $$ = new New($2, new ArrayList<>()); }
 
 Expressions			: Expression {
 						$$ = new ArrayList<Expression>(Arrays.asList($1));
@@ -168,31 +168,36 @@ Statements          : Statement {
 						$$ = $1;
 					}
 
-Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new If($3, $5, null);}
+Ifthenstatement     : JIF LBRACKET Expression  RBRACKET  Statement {$$ = new If($3, $5, null);}
 
-Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new If($3, $5, $7);}
+Ifthenelsestatement : JIF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new If($3, $5, $7);}
 
-Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
+Whilestatement      : JWHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
 
-Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null); }
-                    | RETURN Expression  SEMICOLON { $$ = new Return($2); }
+Returnstatement     : JRETURN SEMICOLON  { $$ = new Return(null); }
+                    | JRETURN Expression  SEMICOLON { $$ = new Return($2); }
 
 Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
                     | Type IDENTIFIER JASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
 
-Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2);}
+Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2, null);}
+					| Type IDENTIFIER JASSIGN Expression SEMICOLON { $$ = new LocalVarDecl($1, $2, $4);}
 
-Parameters          : Parameters COMMA Localvardecleration { 
-						$1.add($3);
+Parameters          : Parameters COMMA Type IDENTIFIER { 
+						$1.add(new LocalVarDecl($3, $4, null));
 						$$ = $1;
 					}
-                    | Localvardecleration { 
-						$$ = new ArrayList<LocalVarDecl>(Arrays.asList($1));
+                    | Type IDENTIFIER { 
+						$$ = new ArrayList<LocalVarDecl>(Arrays.asList(new LocalVarDecl($1, $2, null)));
 					}
 
-Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block { 
+Method              : Type IDENTIFIER LBRACKET RBRACKET Block { 
+						$$ = new Method($2, $1, new ArrayList<>(), $5);
+					}
+					| Type IDENTIFIER LBRACKET Parameters RBRACKET Block { 
 						$$ = new Method($2, $1, $4, $6);
 					}
+					
 					
 FieldsAndMethods    : FieldsAndMethods Field {
 						$1.fieldDecl.add($2);

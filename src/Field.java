@@ -1,7 +1,7 @@
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.*;
 
 import java.util.Map;
+import java.util.List;
 
 public class Field implements TypedParserObject {
 
@@ -9,13 +9,11 @@ public class Field implements TypedParserObject {
     Type type;
     Expression initialValue;
 
-
     public Field(String name, Type type, Expression initialValue) {
         this.name = name;
         this.type = type;
         this.initialValue = initialValue;
     }
-
 
     public void codeGen(ClassWriter cw) {
         FieldVisitor field = cw.visitField(0, name, type.getTypeLiteral(), null, null);
@@ -23,6 +21,14 @@ public class Field implements TypedParserObject {
         //initialValue is handled by the constructor in Clazz
     }
 
+    public void generateInit(MethodVisitor constructor, Clazz clazz, List<LocalVarDecl> noLocalVars){
+        if(initialValue != null){
+            System.out.println("initiating var name with :" + initialValue);
+            constructor.visitVarInsn(Opcodes.ALOAD, 0);
+            initialValue.codeGen(constructor, clazz, noLocalVars);
+            constructor.visitFieldInsn(Opcodes.PUTFIELD, clazz.name.type, name, type.getTypeLiteral());
+        }
+    }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
@@ -36,7 +42,7 @@ public class Field implements TypedParserObject {
         if (b) {
             throw new RuntimeException("Field already exists");
         }
-        if (initialValue.typeCheck(localVars, clazz).equals(type)|| initialValue == null) {
+        if (initialValue == null ||  initialValue.typeCheck(localVars, clazz).equals(type) ) {
             return type;
         } else {
             throw new RuntimeException("Initial value does not equal type");
@@ -48,6 +54,7 @@ public class Field implements TypedParserObject {
         return "Field{" +
                 "name='" + name + '\'' +
                 ",\n type=" + type +
+                ",\n initialvalue=" + initialValue +
                 "\n}";
     }
 }

@@ -1,33 +1,44 @@
-jaooyExe = linux-gnu
+jaooyExe = ./jaooy.linux-gnu
+file = test.java
 
-Main.class: Scanner.class
-	cp Main.java ./build; cd ./build; javac Main.java
+./build/Main.class: ./build/Scanner.class
+	cp Main.java ./build; cd ./build; javac -cp "../asm-9.2.jar:." Main.java
 
-Scanner.class: Scanner.java javaparser.class
+./build/Scanner.class: ./build/javaparser.class ./build/Scanner.java 
 	javac ./build/Scanner.java
 
-Scanner.java: Scanner
+./build/Scanner.java: Scanner
+	mkdir -p ./build
 	java -cp JLex2.jar JLex2.Main Scanner; mv Scanner.java ./build
 
-javaparser.java: javaparser.jay skeleton.jaooy movefiles
-	./jaooy.$(jaooyExe) -v javaparser.jay < ./skeleton.jaooy > javaparser.java; mv javaparser.java ./build
+./build/javaparser.java: javaparser.jay skeleton.jaooy movefiles
+	$(jaooyExe) -v javaparser.jay < ./skeleton.jaooy > javaparser.java; mv javaparser.java ./build
 
-javaparser.class: javaparser.java
+./build/javaparser.class: ./build/javaparser.java
 	cd ./build; javac javaparser.java
 
-Scanner.class: Scanner.java
+./build/Scanner.class: ./build/Scanner.java
 	cd ./build; javac Scanner.java
 
 javafiles.txt:
 	cd ./src; /usr/bin/find . -name "*.java" > ../javafiles.txt
 
 javafiles: javafiles.txt
-	cd ./src; javac -cp ../asm-9.2.jar @../javafiles.txt
+	cd ./src; javac -encoding iso-8859-1 -cp ../asm-9.2.jar @../javafiles.txt
 
 movefiles: javafiles
 	mkdir -p build
 	mv ./src/*.class ./build
 
+rebuild:
+	make clean && make
 
 clean:
-	rm ./build/*
+	rm ./build/* javafiles.txt
+
+compileTest: ./build/Main.class
+	java -cp "asm-9.2.jar:./build" Main < ${file}
+
+runTest:
+	java -cp "asm-9.2.jar:./build" Main < ${file}
+

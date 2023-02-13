@@ -17,17 +17,20 @@ public class Method implements TypedParserObject {
     }
 
 
-    public void codeGen(ClassWriter cw) {
+    public void codeGen(ClassWriter cw, Clazz clazz) {
+        System.out.println("codegen - method " + name);
         MethodVisitor method = cw.visitMethod(
             Opcodes.ACC_PUBLIC, 
             name,
             getTypeSignature(),
                 null,
                 null);
-        //TODO: add the parameters to a localvars list and pass it down the codeGen method
+        List<LocalVarDecl> localVars = new ArrayList<>();
+        localVars.add(new LocalVarDecl(Type.VOID, "this", null));
+        localVars.addAll(parameters);
 
         method.visitCode();
-        block.codeGen(method);
+        block.codeGen(method, clazz, localVars);
         method.visitMaxs(0, 0);
         method.visitEnd();
     }

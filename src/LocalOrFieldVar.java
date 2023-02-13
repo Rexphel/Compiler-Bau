@@ -1,9 +1,12 @@
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LocalOrFieldVar extends Expression {
 
@@ -14,25 +17,31 @@ public class LocalOrFieldVar extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        //TODO: here we need the localvars,
-        //suche nach field -> GETFIELD
-        // ansonsten aload ?
-        if (true /*is LocalVar*/){
-            int localIndex = 1; //TODO: get index from localvars List
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        List<LocalVarDecl> local = localVars.stream().filter(localVarDecl -> localVarDecl.name.equals(name)).toList();
+        List<Field> field = clazz.fieldDecl.stream().filter(field1 -> field1.name.equals(name)).toList();
+        if (!local.isEmpty()) {
+            int localIndex = localVars.indexOf(local.get(0));
             method.visitVarInsn(Opcodes.ILOAD, localIndex);
-        } else if (true /*is Field*/){
-
+        } else if (!field.isEmpty()) {
+            System.out.println("getfield with" +Opcodes.GETFIELD + " " + clazz.name.type + " " + name + " " + field.get(0).type.getTypeLiteral());
+            method.visitVarInsn(Opcodes.ALOAD, 0);
+            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, field.get(0).type.getTypeLiteral());
         }
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        Set<Map.Entry<String, Type>> set = localVars.entrySet().stream().filter(stringTypeEntry -> stringTypeEntry.getKey().equals(name)).collect(Collectors.toSet());
-        if (set.isEmpty()) {
-            throw new RuntimeException("no Variable found");
+        type = localVars.get(name);
+        if (type == null) {
+            List<Field> fieldVars = clazz.fieldDecl.stream().filter(item -> item.name.equals(name)).toList();
+            if (fieldVars.isEmpty()) {
+                throw new RuntimeException("Fieldvar is not found");
+            } else {
+                //Typ von ersten gefundenen Variablen
+                return type = fieldVars.stream().findFirst().get().type;
+            }
         } else {
-            type = localVars.get(name);
             return type;
         }
     }

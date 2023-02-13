@@ -7,7 +7,7 @@ public class New extends StmtExpr {
 
     //Is this even needed?
     Type type;
-    List<Expression> expressionList;
+    List<Expression> expressionList; //parameter in constructor
 
     public New(Type type, List<Expression> expressionList) {
         this.type = type;
@@ -15,25 +15,18 @@ public class New extends StmtExpr {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        //TODO: we only want to call the constructor of this class if possible
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        //TODO: where does the expressionList come from?
-        /*if (super.expression != null && super.statement != null) {
-            throw new RuntimeException("StmtExpr is both a statement and an expression!");
+        //TODO: look if this is right
+        if (expressionList.isEmpty()){
+            return clazz.name;
+        }else{
+            throw new RuntimeException("to many arguments");
         }
-
-        if (super.expression == null) {
-            type = Type.VOID;
-            return type;
-        } else {
-            type = super.expression.typeCheck(localVars, clazz);
-            return type;
-        }*/
-        return null;
     }
 
     @Override

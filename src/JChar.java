@@ -1,6 +1,7 @@
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class JChar extends Expression {
@@ -13,7 +14,7 @@ public class JChar extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         method.visitIntInsn(Opcodes.BIPUSH, this.c);
     }
 

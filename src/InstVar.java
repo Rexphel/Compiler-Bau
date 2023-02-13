@@ -1,4 +1,5 @@
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,15 @@ public class InstVar extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        //TODO: we probably only call an Instvar with "this", then it is gonna be a GETFIELD instruction (insn) (this should aload 0)
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        if (expression instanceof This){
+            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, null); // TODO descriptor
+        } else if (expression instanceof Super) {
+            // TODO
+        }else {
+            // we do not want to handle any other expression!
+        }
+
     }
 
     @Override
