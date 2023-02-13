@@ -1,3 +1,3 @@
-public class Bool {
+class Bool {
     boolean b = true;
 }

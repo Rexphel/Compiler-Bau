@@ -1,5 +1,3 @@
-package org.Junit;
-
 public class ABC {
     public ABC(){}
 

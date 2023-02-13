@@ -1,3 +1,3 @@
-public class Char {
+class Char {
     char c = 'c';
 }

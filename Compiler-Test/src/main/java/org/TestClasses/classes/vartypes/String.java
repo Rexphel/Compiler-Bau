@@ -1,3 +1,3 @@
-public class Strings {
+class String {
      String s = "ssss";
 }

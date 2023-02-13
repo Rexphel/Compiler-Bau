@@ -1,3 +1,3 @@
-public class Double {
-    double d = 1.0;
+class Double {
+    double d = 1.5;
 }

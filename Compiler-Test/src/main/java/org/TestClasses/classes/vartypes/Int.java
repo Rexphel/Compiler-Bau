@@ -1,3 +1,3 @@
-public class Int {
+class Int {
     int i = 1;
 }
