@@ -1,4 +1,4 @@
-jaooyExe = linux-gnu
+jaooyExe = ./jaooy.linux-gnu
 file = test.java
 
 ./build/Main.class: ./build/Scanner.class
@@ -8,10 +8,11 @@ file = test.java
 	javac ./build/Scanner.java
 
 ./build/Scanner.java: Scanner
+	mkdir -p ./build
 	java -cp JLex2.jar JLex2.Main Scanner; mv Scanner.java ./build
 
 ./build/javaparser.java: javaparser.jay skeleton.jaooy movefiles
-	./jaooy.$(jaooyExe) -v javaparser.jay < ./skeleton.jaooy > javaparser.java; mv javaparser.java ./build
+	$(jaooyExe) -v javaparser.jay < ./skeleton.jaooy > javaparser.java; mv javaparser.java ./build
 
 ./build/javaparser.class: ./build/javaparser.java
 	cd ./build; javac javaparser.java
