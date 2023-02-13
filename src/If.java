@@ -36,12 +36,14 @@ public class If extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
-                && statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz))) {
-            type = statement.typeCheck(localVars, clazz);
-            return type;
-        } else {
-            throw new TypeMismatchException("If Statement types do not match");
+        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)){
+            if(statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz)) || maybeStatement == null)
+            {
+                type = statement.typeCheck(localVars, clazz);
+                return type;
+            }else throw new TypeMismatchException("If Statement types do not match");
+        }else {
+            throw new TypeMismatchException("condition is not a boolean");
         }
     }
 

@@ -35,6 +35,11 @@ public class MethodCall extends StmtExpr {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         // TODO: objectExpr darf nur this sein und Parametertype checken
+
+
+
+
+
         return clazz.methodDecl.stream()
                 .filter(method -> method.name.equals(methodName))
                 .map(method -> method.type)

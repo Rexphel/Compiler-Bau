@@ -21,10 +21,10 @@ public class Binary extends Expression {
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         // TODO: we can not compare booleans with <,>,>=,<= also calculate Frames (visitFrame)
-        
-        int opcode = 0 ;
 
-        switch(name) {
+        int opcode = 0;
+
+        switch (name) {
             case "==" -> opcode = Opcodes.IF_ICMPNE;
             case "!=" -> opcode = Opcodes.IF_ICMPEQ;
             case "<" -> opcode = Opcodes.IF_ICMPGE;
@@ -33,7 +33,7 @@ public class Binary extends Expression {
             case ">=" -> opcode = Opcodes.IF_ICMPLT;
         }
 
-        if(opcode != 0){
+        if (opcode != 0) {
             expression1.codeGen(method, clazz, localVars);
             expression2.codeGen(method, clazz, localVars);
             Label falseLabel = new Label();
@@ -50,8 +50,8 @@ public class Binary extends Expression {
 
             method.visitLabel(endLabel);
         }
-        
-        switch(name){
+
+        switch (name) {
             case "&&" -> opcode = Opcodes.IFEQ;
             case "||" -> opcode = Opcodes.IFNE;
         }
@@ -59,13 +59,13 @@ public class Binary extends Expression {
             Label trueLabel = new Label();
             Label falseLabel = new Label();
             //load first
-            if(opcode == Opcodes.IFEQ){
+            if (opcode == Opcodes.IFEQ) {
                 expression1.codeGen(method, clazz, localVars);
                 method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
                 expression2.codeGen(method, clazz, localVars);
                 method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
                 method.visitJumpInsn(Opcodes.GOTO, trueLabel);
-            }else {
+            } else {
                 expression1.codeGen(method, clazz, localVars);
                 method.visitJumpInsn(Opcodes.IFNE, trueLabel);
                 expression2.codeGen(method, clazz, localVars);
@@ -85,10 +85,10 @@ public class Binary extends Expression {
 
             method.visitLabel(endLabel);
         }
-        
+
         if (this.type.type.equals("int")) {
             expression1.codeGen(method, clazz, localVars);
-            expression2.codeGen(method,clazz, localVars);
+            expression2.codeGen(method, clazz, localVars);
             switch (name) {
                 case "+" -> method.visitInsn(Opcodes.IADD);
                 case "-" -> method.visitInsn(Opcodes.ISUB);
@@ -109,7 +109,7 @@ public class Binary extends Expression {
             ) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
-            } else if ("-*%".contains(name) &&
+            } else if ("-*%/".contains(name) &&
                     expression1.typeCheck(localVars, clazz).equals(Type.INTEGER)) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
@@ -119,14 +119,22 @@ public class Binary extends Expression {
             ) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
-            } else if (name.equals("==") || name.equals("!=") || name.equals("<") || name.equals(">") || name.equals("<=") || name.equals(">=")) {
-                if (expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))) { //TODO same as for codeGen we can not use all compare operations on booleans
-                    type = expression1.typeCheck(localVars, clazz);
-                    return type;
+            } else if (name.equals("==") || name.equals("!=")) {
+                if (expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))) {
+                    return Type.BOOLEAN;
                 } else {
                     throw new TypeMismatchException("Types of Expressions does not match");
                 }
 
+            } else if (name.equals("<") || name.equals(">") || name.equals("<=") || name.equals(">=")) {
+                if (expression1.typeCheck(localVars, clazz).equals(Type.BOOLEAN) || expression2.typeCheck(localVars, clazz).equals(Type.BOOLEAN)) {
+                    throw new TypeMismatchException("can not use this binary with boolean");
+                }
+                if (expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))) {
+                    return Type.BOOLEAN;
+                } else {
+                    throw new TypeMismatchException("Types of Expressions does not match");
+                }
             } else {
                 throw new TypeMismatchException("Name does not match or expressions are from wrong Type");
             }

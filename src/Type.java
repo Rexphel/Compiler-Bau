@@ -20,7 +20,10 @@ public class Type {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Type type1 = (Type) o;
-        return Objects.equals(type, type1.type);
+        if (Objects.equals(type, type1.type)){
+            return true;
+        }
+        return ((this.type.equals("int") && type1.type.equals("char")) || (this.type.equals("char") && type1.type.equals("int")));
     }
 
     @Override
