@@ -23,7 +23,7 @@ public class Unary extends Expression {
             method.visitInsn(Opcodes.INEG);
         }
         else if (name.equals("!")){
-            // TODO: we may have to do something with visitFrame here, because of the jump
+            // TODO: we have to do something with visitFrame here, because of the jump
             Label endLabel = new Label();
             Label falseLabel = new Label();
             method.visitJumpInsn(Opcodes.IFNE, falseLabel);

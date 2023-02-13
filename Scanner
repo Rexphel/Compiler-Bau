@@ -52,12 +52,13 @@ true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
 "this" {System.out.print(yytext()); return new JTHIS(yytext());}
 "void" {System.out.print(yytext()); return new VOID(yytext());}
 "return" {System.out.print(yytext()+"RETURN"); return new RETURN(yytext());}
-[a-zA-Z_][0-9a-zA-Z_]* {System.out.print("IDENTIFIER: " + yytext()); return new IDENTIFIER(yytext());}
 
 if {System.out.print(yytext()); return new IF(yytext());}
 else {System.out.print(yytext()); return new ELSE(yytext());}
 while {System.out.print(yytext()); return new WHILE(yytext());}
 return {System.out.print(yytext()); return new RETURN(yytext());}
+
+[a-zA-Z_][0-9a-zA-Z_]* {System.out.print("IDENTIFIER: " + yytext()); return new IDENTIFIER(yytext());}
 
 {ws} {System.out.print(yytext());}
 .  { System.out.println("Why are we here: " + yytext() + "?"); }

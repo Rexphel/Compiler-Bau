@@ -34,7 +34,7 @@ public class Type {
         return switch (type) {
             case "boolean" -> "Z";
             case "int" -> "I";
-            case "String" -> "Ljava/lang/String;"; //this is an Object...
+            case "String" -> "Ljava/lang/String;"; 
             case "char" -> "C";
             default -> "V";
         };

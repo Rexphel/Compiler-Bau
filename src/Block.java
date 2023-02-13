@@ -30,6 +30,7 @@ public class Block extends Statement {
             }
         });
         if (!types.isEmpty()) {
+            System.out.println("Blocktypes found:" + types.toString());
             type = types.get(0);
         } else {
             type = Type.VOID;

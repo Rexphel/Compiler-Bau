@@ -30,7 +30,7 @@ public class LocalVarDecl extends Statement {
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         if ((initialValue.typeCheck(localVars, clazz).equals(type)) || initialValue == null) {
             localVars.put(name, type);
-            return type;
+            return Type.VOID; //TODO: watch out! Don't know if VOID is realy true here (before : type)
         } else {
             throw new RuntimeException("initial Value does not equal type");
         }
