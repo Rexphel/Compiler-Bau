@@ -22,6 +22,9 @@ public class Return extends Statement {
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
 
+        if(expression != null) {
+            expression.codeGen(method, clazz, localVars);
+        }
         int returnCode = switch (type.getTypeLiteral()) {
             case "Z", "C", "I" -> Opcodes.IRETURN;
             case "V" -> Opcodes.RETURN;

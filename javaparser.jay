@@ -44,12 +44,8 @@
 %token IDENTIFIER
 %token DOT 
 %token COMMA 
- 
-%type <boolean> BOOLLITERAL
-%type <int> INTLITERAL
-%type <char> CHARLITERAL
 
-%type <String> VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
+%type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
 
 %type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
@@ -74,7 +70,6 @@
 
 %type <Clazz> Class FieldsAndMethods
 %type <Type> Type
-%type <Parameter> Parameter
 %type <Field> Field
 %type <Method> Method
 
@@ -84,12 +79,13 @@
 Class               : CLASS IDENTIFIER LBRACE RBRACE { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
                     | CLASS IDENTIFIER LBRACE FieldsAndMethods RBRACE { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
 
-Block               : LBRACKET RBRACKET { $$ = new Block(new ArrayList<Statement>());}
-                    | LBRACKET Statements  RBRACKET { $$ = new Block($2); }
+Block               : LBRACE RBRACE{ $$ = new Block(new ArrayList<Statement>());}
+                    | LBRACE Statements  RBRACE { $$ = new Block($2); }
 
 Statement           : Ifthenstatement {$$ = $1;}
                     | Ifthenelsestatement {$$ = $1;}
                     | Whilestatement {$$ = $1;}
+					| Localvardecleration {$$ = $1;}
                     | Block {$$ = $1;}
                     | Emptystatement {$$ = $1;}
                     | Returnstatement {$$ = $1;}
@@ -100,9 +96,11 @@ Expression          : JSUPER {$$ = new Super();}
 					| InstVar {$$ = $1;}
 					| Unary {$$ = $1;}
 					| Binary {$$ = $1;}
-					| INTLITERAL {$$ = new JInteger($1);}
-					| BOOLLITERAL {$$ = new Bool($1);}
-					| CHARLITERAL {$$ = new JChar($1);}
+					| INTLITERAL {$$ = new JInteger(Integer.parseInt($1));}
+					| BOOLLITERAL {
+						$$ = new Bool(Boolean.parseBoolean($1));
+					   }
+					| CHARLITERAL {$$ = new JChar($1.charAt(1));}
 					| STRINGLITERAL {$$ = new JString($1);}
 					| NULLLITERAL {$$ = new JNull();}
 					| Stmtexprexpr {$$ = $1;}
@@ -180,19 +178,24 @@ Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null); }
 Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
                     | Type IDENTIFIER JASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
 
-Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2);}
+Localvardecleration : Type IDENTIFIER { $$ = new LocalVarDecl($1, $2, null);}
+					| Type IDENTIFIER JASSIGN Expression SEMICOLON { $$ = new LocalVarDecl($1, $2, $4);}
 
-Parameters          : Parameters COMMA Localvardecleration { 
-						$1.add($3);
+Parameters          : Parameters COMMA Type IDENTIFIER { 
+						$1.add(new LocalVarDecl($3, $4, null));
 						$$ = $1;
 					}
-                    | Localvardecleration { 
-						$$ = new ArrayList<LocalVarDecl>(Arrays.asList($1));
+                    | Type IDENTIFIER { 
+						$$ = new ArrayList<LocalVarDecl>(Arrays.asList(new LocalVarDecl($1, $2, null)));
 					}
 
-Method              : Type IDENTIFIER LBRACE Parameters RBRACE Block { 
+Method              : Type IDENTIFIER LBRACKET RBRACKET Block { 
+						$$ = new Method($2, $1, new ArrayList<>(), $5);
+					}
+					| Type IDENTIFIER LBRACKET Parameters RBRACKET Block { 
 						$$ = new Method($2, $1, $4, $6);
 					}
+					
 					
 FieldsAndMethods    : FieldsAndMethods Field {
 						$1.fieldDecl.add($2);

@@ -8,7 +8,7 @@ public class JString extends Expression {
     String str;
 
     public JString(String str) {
-        this.str = str;
+        this.str = str; // TODO: we may want to runcate the ""
     }
 
     @Override

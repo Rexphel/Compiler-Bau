@@ -1,7 +1,7 @@
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.*;
 
 import java.util.Map;
+import java.util.List;
 
 public class Field implements TypedParserObject {
 
@@ -19,6 +19,15 @@ public class Field implements TypedParserObject {
         FieldVisitor field = cw.visitField(0, name, type.getTypeLiteral(), null, null);
         field.visitEnd();
         //initialValue is handled by the constructor in Clazz
+    }
+
+    public void generateInit(MethodVisitor constructor, Clazz clazz, List<LocalVarDecl> noLocalVars){
+        if(initialValue != null){
+            System.out.println("initiating var name with :" + initialValue);
+            constructor.visitVarInsn(Opcodes.ALOAD, 0);
+            initialValue.codeGen(constructor, clazz, noLocalVars);
+            constructor.visitFieldInsn(Opcodes.PUTFIELD, clazz.name.type, name, type.getTypeLiteral());
+        }
     }
 
     @Override
@@ -45,6 +54,7 @@ public class Field implements TypedParserObject {
         return "Field{" +
                 "name='" + name + '\'' +
                 ",\n type=" + type +
+                ",\n initialvalue=" + initialValue +
                 "\n}";
     }
 }

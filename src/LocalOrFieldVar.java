@@ -24,7 +24,9 @@ public class LocalOrFieldVar extends Expression {
             int localIndex = localVars.indexOf(local.get(0));
             method.visitVarInsn(Opcodes.ILOAD, localIndex);
         } else if (!field.isEmpty()) {
-            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, null); // TODO: descriptor
+            System.out.println("getfield with" +Opcodes.GETFIELD + " " + clazz.name.type + " " + name + " " + field.get(0).type.getTypeLiteral());
+            method.visitVarInsn(Opcodes.ALOAD, 0);
+            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, field.get(0).type.getTypeLiteral());
         }
     }
 

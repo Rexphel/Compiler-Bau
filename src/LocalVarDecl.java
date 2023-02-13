@@ -10,9 +10,10 @@ public class LocalVarDecl extends Statement {
     Type type;
     String name;
 
-    public LocalVarDecl(Type type, String name) {
+    public LocalVarDecl(Type type, String name, Expression initialValue) {
         this.type = type;
         this.name = name;
+        this.initialValue = initialValue;
     }
 
     @Override

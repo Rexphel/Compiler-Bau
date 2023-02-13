@@ -49,13 +49,11 @@ public class Clazz {
         constructor.visitCode();
         constructor.visitVarInsn(ALOAD, 0);
         constructor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        List<LocalVarDecl> nolocalVars = new ArrayList<>();
+        nolocalVars.add(new LocalVarDecl(name,"0", null));
 
         for (Field field : fieldDecl) {
-            if (field.initialValue != null){
-                constructor.visitVarInsn(Opcodes.ALOAD, 0);
-                field.initialValue.codeGen(constructor, this, new ArrayList<>());
-                constructor.visitFieldInsn(Opcodes.PUTFIELD, this.name.type, field.name, field.type.getTypeLiteral() );
-            }
+            field.generateInit(constructor, this, nolocalVars);
         }
 
         // wenn in FieldDecl statt nur field auch assign stehen kann müssen hier im Konstructor die Initialwerte geladen werden

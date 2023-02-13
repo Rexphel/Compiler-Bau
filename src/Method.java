@@ -18,6 +18,7 @@ public class Method implements TypedParserObject {
 
 
     public void codeGen(ClassWriter cw, Clazz clazz) {
+        System.out.println("codegen - method " + name);
         MethodVisitor method = cw.visitMethod(
             Opcodes.ACC_PUBLIC, 
             name,
@@ -25,7 +26,7 @@ public class Method implements TypedParserObject {
                 null,
                 null);
         List<LocalVarDecl> localVars = new ArrayList<>();
-        localVars.add(new LocalVarDecl(Type.VOID, "this"));
+        localVars.add(new LocalVarDecl(Type.VOID, "this", null));
         localVars.addAll(parameters);
 
         method.visitCode();
