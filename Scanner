@@ -51,12 +51,11 @@ true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
 "super" {System.out.print(yytext()); return new JSUPER(yytext());}
 "this" {System.out.print(yytext()); return new JTHIS(yytext());}
 "void" {System.out.print(yytext()); return new VOID(yytext());}
-"return" {System.out.print(yytext()+"RETURN"); return new RETURN(yytext());}
+"return" {System.out.print(yytext()+"RETURN"); return new JRETURN(yytext());}
 
-if {System.out.print(yytext()); return new IF(yytext());}
+if {System.out.print(yytext()); return new JIF(yytext());}
 else {System.out.print(yytext()); return new ELSE(yytext());}
-while {System.out.print(yytext()); return new WHILE(yytext());}
-return {System.out.print(yytext()); return new RETURN(yytext());}
+while {System.out.print(yytext()); return new JWHILE(yytext());}
 
 [a-zA-Z_][0-9a-zA-Z_]* {System.out.print("IDENTIFIER: " + yytext()); return new IDENTIFIER(yytext());}
 

@@ -15,7 +15,6 @@ class Main {
             clazz.typeCheck();
             byte[] bytecode = clazz.codeGen();
             writeClassfile(bytecode);
-            // TODO write to file
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -45,7 +45,7 @@ public class Binary extends Expression {
             method.visitJumpInsn(Opcodes.GOTO, endLabel);
 
             method.visitLabel(falseLabel);
-            method.visitInsn(Opcodes.F_SAME, 0, null, 0, null);
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             method.visitInsn(Opcodes.ICONST_0);
 
             method.visitLabel(endLabel);

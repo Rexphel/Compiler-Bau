@@ -22,11 +22,11 @@
 %token GREATEROREQUAL
 %token LESS 
 %token LESSOREQUAL
-%token IF 
+%token JIF
 %token ELSE 
-%token WHILE 
+%token JWHILE
 %token SEMICOLON 
-%token RETURN 
+%token JRETURN
 %token BOOLEAN 
 %token INT 
 %token CHAR 
@@ -43,7 +43,7 @@
 %token VOID 
 %token IDENTIFIER
 %token DOT 
-%token COMMA 
+%token COMMA
 
 %type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
 
@@ -168,14 +168,14 @@ Statements          : Statement {
 						$$ = $1;
 					}
 
-Ifthenstatement     : IF LBRACKET Expression  RBRACKET  Statement {$$ = new If($3, $5, null);}
+Ifthenstatement     : JIF LBRACKET Expression  RBRACKET  Statement {$$ = new If($3, $5, null);}
 
-Ifthenelsestatement : IF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new If($3, $5, $7);}
+Ifthenelsestatement : JIF LBRACKET Expression  RBRACKET Statement ELSE Statement  {$$ = new If($3, $5, $7);}
 
-Whilestatement      : WHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
+Whilestatement      : JWHILE LBRACKET Expression  RBRACKET  Statement {$$ = new While($3, $5);}
 
-Returnstatement     : RETURN SEMICOLON  { $$ = new Return(null); }
-                    | RETURN Expression  SEMICOLON { $$ = new Return($2); }
+Returnstatement     : JRETURN SEMICOLON  { $$ = new Return(null); }
+                    | JRETURN Expression  SEMICOLON { $$ = new Return($2); }
 
 Field            	: Type IDENTIFIER SEMICOLON { $$ = new Field($2, $1, null);}
                     | Type IDENTIFIER JASSIGN Expression SEMICOLON { $$ = new Field($2, $1, $4);}
@@ -227,6 +227,5 @@ Type				: VOID { $$ = new Type($1); }
 					| CHAR { $$ = new Type($1); }
 					| STRING { $$ = new Type($1); }
 					| INT { $$ = new Type($1); }
-					| IDENTIFIER { $$ = new Type($1);}
 %%
 }
