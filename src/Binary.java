@@ -101,16 +101,16 @@ public class Binary extends Expression {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         if (
-                expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))
+                expression1.typeCheck(localVars, clazz).equalz(expression2.typeCheck(localVars, clazz))
         ) {
             if (name.equals("+") &&
-                    (expression1.typeCheck(localVars, clazz).equals(Type.INTEGER) ||
-                            expression1.typeCheck(localVars, clazz).equals(Type.STRING))
+                    (expression1.typeCheck(localVars, clazz).equalz(Type.INTEGER) ||
+                            expression1.typeCheck(localVars, clazz).equalz(Type.STRING))
             ) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
             } else if ("-*%/".contains(name) &&
-                    expression1.typeCheck(localVars, clazz).equals(Type.INTEGER)) {
+                    expression1.typeCheck(localVars, clazz).equalz(Type.INTEGER)) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
             } else if (
@@ -120,17 +120,17 @@ public class Binary extends Expression {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
             } else if (name.equals("==") || name.equals("!=")) {
-                if (expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))) {
+                if (expression1.typeCheck(localVars, clazz).equalz(expression2.typeCheck(localVars, clazz))) {
                     return Type.BOOLEAN;
                 } else {
                     throw new TypeMismatchException("Types of Expressions does not match");
                 }
 
             } else if (name.equals("<") || name.equals(">") || name.equals("<=") || name.equals(">=")) {
-                if (expression1.typeCheck(localVars, clazz).equals(Type.BOOLEAN) || expression2.typeCheck(localVars, clazz).equals(Type.BOOLEAN)) {
+                if (expression1.typeCheck(localVars, clazz).equalz(Type.BOOLEAN) || expression2.typeCheck(localVars, clazz).equalz(Type.BOOLEAN)) {
                     throw new TypeMismatchException("can not use this binary with boolean");
                 }
-                if (expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))) {
+                if (expression1.typeCheck(localVars, clazz).equalz(expression2.typeCheck(localVars, clazz))) {
                     return Type.BOOLEAN;
                 } else {
                     throw new TypeMismatchException("Types of Expressions does not match");
