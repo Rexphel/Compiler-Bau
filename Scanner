@@ -25,6 +25,7 @@ ws = [ \t\r\n\b\015]+
 "-" {System.out.print(yytext()); return new MINUS(yytext());}
 "*" {System.out.print(yytext()); return new MULTIPLY(yytext());}
 "/" {System.out.print(yytext()); return new DIVIDE(yytext());}
+"%" {System.out.print(yytext()); return new MODULO(yytext());}
 
 "=" {System.out.print(yytext()); return new JASSIGN(yytext());}
 "!" {System.out.print(yytext()); return new NOT(yytext());}
@@ -42,7 +43,7 @@ ws = [ \t\r\n\b\015]+
 
 "null" {System.out.print(yytext()); return new NULLLITERAL(yytext());}
 true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
-[1-9][0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
+[0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
 \".*\" {System.out.print(yytext()); return new STRINGLITERAL(yytext());}
 \'.\' {System.out.print(yytext()); return new CHARLITERAL(yytext());}
 

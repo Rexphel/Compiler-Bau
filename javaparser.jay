@@ -14,7 +14,8 @@
 %token PLUS 
 %token MINUS 
 %token MULTIPLY 
-%token DIVIDE 
+%token DIVIDE
+%token MODULO
 %token JASSIGN
 %token EQUALS
 %token NOTEQUAL 
@@ -45,7 +46,7 @@
 %token DOT 
 %token COMMA
 
-%type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
+%type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE MODULO IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
 
 %type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
@@ -128,6 +129,7 @@ Binaryoperator		: PLUS {$$ = $1;}
 					| MINUS {$$ = $1;}
 					| MULTIPLY {$$ = $1;}
 					| DIVIDE {$$ = $1;}
+					| MODULO {$$ = $1;}
 					| EQUALS {$$ = $1;}
 					| NOTEQUAL {$$ = $1;}
 					| GREATER {$$ = $1;}

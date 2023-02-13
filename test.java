@@ -1,13 +1,17 @@
 class test {
     int i = 5;
 	int meth ( int a , int b ) {
-		int x = a + b;
-		int y = x - a;
-		return y;
+		int x = 7;
+		int y = b + a;
+		return x * y;
 	}
 	
 	int meth2 (boolean a, int b) {
 		boolean r = a;
-		return this.meth(5, b);
+		if(r == true){
+			r = false;
+			return b;
+		}
+		else return 5;
 	}
 }
