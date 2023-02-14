@@ -34,23 +34,23 @@ public class Binary extends Expression {
         }
 
         if(opcode != 0){
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             expression1.codeGen(method, clazz, localVars);
             expression2.codeGen(method, clazz, localVars);
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             Label falseLabel = new Label();
             Label endLabel = new Label();
             method.visitJumpInsn(opcode, falseLabel);
-            method.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {Opcodes.INTEGER});
-
+            
             method.visitInsn(Opcodes.ICONST_1);
 
             method.visitJumpInsn(Opcodes.GOTO, endLabel);
 
             method.visitLabel(falseLabel);
-            method.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[] {Opcodes.INTEGER});
             method.visitInsn(Opcodes.ICONST_0);
 
             method.visitLabel(endLabel);
-            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+            return;
         }
 
         switch(name){
@@ -84,6 +84,7 @@ public class Binary extends Expression {
             method.visitInsn(Opcodes.ICONST_0);
 
             method.visitLabel(endLabel);
+            return;
         }
         switch (name) {
             case "+" -> opcode = Opcodes.IADD;
@@ -96,6 +97,7 @@ public class Binary extends Expression {
             expression1.codeGen(method, clazz, localVars);
             expression2.codeGen(method,clazz, localVars);
             method.visitInsn(opcode);
+            return;
         }
     }
 
