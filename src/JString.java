@@ -13,7 +13,7 @@ public class JString extends Expression {
 
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
-
+        method.visitLdcInsn(str);
     }
 
     @Override

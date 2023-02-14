@@ -39,6 +39,14 @@ public class Type {
             default -> "V";
         };
     }
+
+    public boolean isObjectType(){
+        return switch (type){
+            case "boolean", "int", "char", "void" -> false;
+            default -> true;
+        };
+    }
+
     public boolean equalz(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

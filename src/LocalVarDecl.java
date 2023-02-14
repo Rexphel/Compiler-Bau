@@ -41,6 +41,7 @@ public class LocalVarDecl extends Statement {
         return "LocalVarDecl{" +
                 "type=" + type +
                 ",\n name='" + name + '\'' +
+                ",\n initialvalue='" + initialValue + '\'' +
                 "\n}";
     }
 }

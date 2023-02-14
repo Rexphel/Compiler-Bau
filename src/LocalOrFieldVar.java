@@ -22,7 +22,11 @@ public class LocalOrFieldVar extends Expression {
         List<Field> field = clazz.fieldDecl.stream().filter(field1 -> field1.name.equals(name)).toList();
         if (!local.isEmpty()) {
             int localIndex = localVars.indexOf(local.get(0));
+            if(local.get(0).type.isObjectType()){
+                method.visitVarInsn(Opcodes.ALOAD, localIndex);
+            } else {
             method.visitVarInsn(Opcodes.ILOAD, localIndex);
+            }
         } else if (!field.isEmpty()) {
             System.out.println("getfield with" +Opcodes.GETFIELD + " " + clazz.name.type + " " + name + " " + field.get(0).type.getTypeLiteral());
             method.visitVarInsn(Opcodes.ALOAD, 0);

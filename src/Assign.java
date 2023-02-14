@@ -23,7 +23,11 @@ public class Assign extends StmtExpr {
             int localIndex = localVars.indexOf(local.get(0));
             localVars.indexOf(local.stream().findFirst().get());
             expression.codeGen(method, clazz, localVars);
-            method.visitVarInsn(Opcodes.ISTORE, localIndex); //TODO: this could also be ASTORE
+            if (expression.type.isObjectType()){
+                method.visitVarInsn(Opcodes.ASTORE, localIndex);
+            } else {
+                method.visitVarInsn(Opcodes.ISTORE, localIndex);
+            } 
         } else if (!field.isEmpty()){
             method.visitVarInsn(Opcodes.ALOAD, 0);
             expression.codeGen(method, clazz, localVars);

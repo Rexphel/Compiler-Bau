@@ -8,9 +8,9 @@ class test {
 	
 	int meth2 (boolean a, int b) {
 		boolean r = !a;
+		String f = "42";
 		int i = b;
 		while ( r != true){
-			r = true;
 			i = i + 1;
 		}
 		return i;
