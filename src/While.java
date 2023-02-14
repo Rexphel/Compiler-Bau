@@ -22,7 +22,7 @@ public class While extends Statement {
         Label endLabel = new Label();
         method.visitLabel(startLabel);
         expression.codeGen(method, clazz, localVars);
-        method.visitJumpInsn(Opcodes.IFNE,endLabel);
+        method.visitJumpInsn(Opcodes.IFEQ,endLabel);
         statement.codeGen(method, clazz, localVars);
         method.visitJumpInsn(Opcodes.GOTO, startLabel);
         method.visitLabel(endLabel);

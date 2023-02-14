@@ -20,7 +20,7 @@ public class Assign extends StmtExpr {
         List<LocalVarDecl> local = localVars.stream().filter(localVarDecl -> localVarDecl.name.equals(var.name)).toList();
         List<Field> field = clazz.fieldDecl.stream().filter(field1 -> field1.name.equals(var.name)).toList();
         if (!local.isEmpty()){
-            int localIndex = 1;
+            int localIndex = localVars.indexOf(local.get(0));
             localVars.indexOf(local.stream().findFirst().get());
             expression.codeGen(method, clazz, localVars);
             method.visitVarInsn(Opcodes.ISTORE, localIndex); //TODO: this could also be ASTORE

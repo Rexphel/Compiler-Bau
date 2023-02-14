@@ -7,7 +7,12 @@ class test {
 	}
 	
 	int meth2 (boolean a, int b) {
-		boolean r = a;
-			return this.meth(5, b);
+		boolean r = false;
+		int i = b;
+		while ( r != true){
+			r = true;
+			i = i + 1;
+		}
+		return i;
 	}
 }
