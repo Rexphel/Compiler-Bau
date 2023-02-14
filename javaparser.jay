@@ -229,5 +229,6 @@ Type				: VOID { $$ = new Type($1); }
 					| CHAR { $$ = new Type($1); }
 					| STRING { $$ = new Type($1); }
 					| INT { $$ = new Type($1); }
+					| IDENTIFIER {$$ = new Type($1);}
 %%
 }

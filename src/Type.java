@@ -36,7 +36,8 @@ public class Type {
             case "int" -> "I";
             case "String" -> "Ljava/lang/String;"; 
             case "char" -> "C";
-            default -> "V";
+            case "void" -> "V";
+            default -> "L"+ type + ";";
         };
     }
 

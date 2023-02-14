@@ -1,11 +1,10 @@
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.*;
 
 import java.util.List;
 import java.util.Map;
 
 public class New extends StmtExpr {
 
-    //Is this even needed?
     Type type;
     List<Expression> expressionList; //parameter in constructor
 
@@ -16,7 +15,9 @@ public class New extends StmtExpr {
 
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
-        //TODO: we only want to call the constructor of this class if possible
+        method.visitTypeInsn(Opcodes.NEW, clazz.name.type);
+        method.visitInsn(Opcodes.DUP);
+        method.visitMethodInsn(Opcodes.INVOKESPECIAL, clazz.name.type, "<init>", "()V", false );
     }
 
     @Override

@@ -22,7 +22,11 @@ public class LocalVarDecl extends Statement {
         if (initialValue != null){
             int localIndex = localVars.size() -1;
             initialValue.codeGen(method, clazz, localVars);
-            method.visitVarInsn(Opcodes.ISTORE, localIndex); // TODO: we have more than Integer, what about Strings? -ASTORE
+            if(initialValue.type.isObjectType()){
+                method.visitVarInsn(Opcodes.ASTORE, localIndex);
+            }else {
+                method.visitVarInsn(Opcodes.ISTORE, localIndex);
+            } 
         }
     }
 
