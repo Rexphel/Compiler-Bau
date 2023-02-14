@@ -56,7 +56,7 @@ public class MethodCall extends StmtExpr {
                     // add the method after we checked all parameters
                     if (j + 1 == methodz.parameters.size()) {
                         foundMethod.add(methodz);
-                    } else throw new RuntimeException("hear we should not land");
+                    } 
                 }
             }
         }

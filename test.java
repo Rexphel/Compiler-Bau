@@ -8,10 +8,6 @@ class test {
 	
 	int meth2 (boolean a, int b) {
 		boolean r = a;
-		if(r == true){
-			r = false;
-			return b;
-		}
-		else return 5;
+			return this.meth(5, b);
 	}
 }
