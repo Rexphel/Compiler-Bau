@@ -105,8 +105,7 @@ public class Binary extends Expression {
                 expression1.typeCheck(localVars, clazz).equalz(expression2.typeCheck(localVars, clazz))
         ) {
             if (name.equals("+") &&
-                    (expression1.typeCheck(localVars, clazz).equalz(Type.INTEGER) ||
-                            expression1.typeCheck(localVars, clazz).equalz(Type.STRING))
+                    (expression1.typeCheck(localVars, clazz).equals(Type.INTEGER))
             ) {
                 type = expression1.typeCheck(localVars, clazz);
                 return type;
@@ -119,7 +118,7 @@ public class Binary extends Expression {
                             expression1.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
             ) {
                 type = expression1.typeCheck(localVars, clazz);
-                return type;
+                return type;    //bool
             } else if (name.equals("==") || name.equals("!=")) {
                 if (expression1.typeCheck(localVars, clazz).equalz(expression2.typeCheck(localVars, clazz))) {
                     return Type.BOOLEAN;

@@ -32,7 +32,7 @@ public class LocalVarDecl extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if ((initialValue.typeCheck(localVars, clazz).equals(type)) || initialValue == null) {
+        if ((initialValue == null || initialValue.typeCheck(localVars, clazz).equals(type))) {
             localVars.put(name, type);
             return Type.VOID;   
         } else {
