@@ -28,3 +28,7 @@
 - Sean Schwarz
 - Rafael Simon
 - Matthias Fürstenau
+
+## Klassendiagramm
+[Klassendiagramm](https://user-images.githubusercontent.com/95235774/218823205-194647d5-a67d-4379-bcf1-bba9955b7be8.jpg)
+
