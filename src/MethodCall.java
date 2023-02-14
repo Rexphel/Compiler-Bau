@@ -56,7 +56,7 @@ public class MethodCall extends StmtExpr {
                     // add the method after we checked all parameters
                     if (j + 1 == methodz.parameters.size()) {
                         foundMethod.add(methodz);
-                    } else throw new RuntimeException("hear we should not land");
+                    } else throw new TypeMismatchException("hear we should not land");
                 }
             }
         }
@@ -69,7 +69,7 @@ public class MethodCall extends StmtExpr {
                 .filter(method -> method.name.equals(methodName))
                 .map(method -> method.type)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No Method found to call!"));*/
+                .orElseThrow(() -> new TypeMismatchException("No Method found to call!"));*/
     }
 
     @Override

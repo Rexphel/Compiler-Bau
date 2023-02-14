@@ -25,7 +25,7 @@ public class New extends StmtExpr {
         if (expressionList.isEmpty()){
             return clazz.name;
         }else{
-            throw new RuntimeException("to many arguments");
+            throw new TypeMismatchException("to many arguments");
         }
     }
 

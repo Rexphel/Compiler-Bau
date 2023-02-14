@@ -37,7 +37,7 @@ public class Assign extends StmtExpr {
             type = expression.typeCheck(localVars, clazz);
             return type;
         } else {
-            throw new RuntimeException("VarType and expression Type mismatch");
+            throw new TypeMismatchException("VarType and expression Type mismatch");
         }
     }
 

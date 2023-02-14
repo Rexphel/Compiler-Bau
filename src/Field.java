@@ -40,12 +40,12 @@ public class Field implements TypedParserObject {
             }
         }
         if (b) {
-            throw new RuntimeException("Field already exists");
+            throw new TypeMismatchException("Field already exists");
         }
         if (initialValue == null ||  initialValue.typeCheck(localVars, clazz).equals(type) ) {
             return type;
         } else {
-            throw new RuntimeException("Initial value does not equal type");
+            throw new TypeMismatchException("Initial value does not equal type");
         }
     }
 

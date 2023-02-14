@@ -36,7 +36,7 @@ public class InstVar extends Expression {
             type = namedField.get(0).type;
             return type;
         } else {
-            throw new RuntimeException("Field " + name + " not found.");
+            throw new TypeMismatchException("Field " + name + " not found.");
         }
     }
 
