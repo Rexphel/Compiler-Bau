@@ -23,7 +23,6 @@ public class If extends Statement {
         Label endLabel = new Label();
         condition.codeGen(method, clazz, localVars);
         // ifblock
-        // TODO: this has to be tested! Can work like this. Problem: return inside the if-Block, few Labels could be unnecessary then.
         method.visitJumpInsn(Opcodes.IFEQ, elseLabel);
         statement.codeGen(method, clazz, localVars);
         method.visitJumpInsn(Opcodes.GOTO, endLabel);

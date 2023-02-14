@@ -22,7 +22,6 @@ public class New extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        //TODO: look if this is right
         if (expressionList.isEmpty()){
             return clazz.name;
         }else{
