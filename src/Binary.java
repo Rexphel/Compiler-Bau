@@ -2,6 +2,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class Binary extends Expression {
@@ -18,39 +19,58 @@ public class Binary extends Expression {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        // TODO: we want another if branch before, where the different compare operations are handled
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        int opcode = 0 ;
 
-        // this should be the else branch then
-        if (this.type.type.equals("int")){
-            expression1.codeGen(method);
-            expression2.codeGen(method);
-            switch (name){
-                case "+" -> method.visitInsn(Opcodes.IADD);
-                case "-" -> method.visitInsn(Opcodes.ISUB);
-                case "*" -> method.visitInsn(Opcodes.IMUL);
-                case "%" -> method.visitInsn(Opcodes.IREM);
-            }
+        switch(name) {
+            case "==" -> opcode = Opcodes.IF_ICMPNE;
+            case "!=" -> opcode = Opcodes.IF_ICMPEQ;
+            case "<" -> opcode = Opcodes.IF_ICMPGE;
+            case ">" -> opcode = Opcodes.IF_ICMPLE;
+            case "<=" -> opcode = Opcodes.IF_ICMPGT;
+            case ">=" -> opcode = Opcodes.IF_ICMPLT;
         }
-        if (this.type.type.equals("boolean")) {
+
+        if(opcode != 0){
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+            expression1.codeGen(method, clazz, localVars);
+            expression2.codeGen(method, clazz, localVars);
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+            Label falseLabel = new Label();
+            Label endLabel = new Label();
+            method.visitJumpInsn(opcode, falseLabel);
+            
+            method.visitInsn(Opcodes.ICONST_1);
+
+            method.visitJumpInsn(Opcodes.GOTO, endLabel);
+
+            method.visitLabel(falseLabel);
+            method.visitInsn(Opcodes.ICONST_0);
+
+            method.visitLabel(endLabel);
+            return;
+        }
+
+        switch(name){
+            case "&&" -> opcode = Opcodes.IFEQ;
+            case "||" -> opcode = Opcodes.IFNE;
+        }
+        if (opcode != 0) {
             Label trueLabel = new Label();
             Label falseLabel = new Label();
             //load first
-            switch (name){
-                case "&&" -> {
-                    expression1.codeGen(method);
-                    method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
-                    expression2.codeGen(method);
-                    method.visitJumpInsn(Opcodes.IFEQ, falseLabel);
-                    method.visitJumpInsn(Opcodes.GOTO, trueLabel);
-                }
-                case "||" -> {
-                    expression1.codeGen(method);
-                    method.visitJumpInsn(Opcodes.IFNE, trueLabel);
-                    expression2.codeGen(method);
-                    method.visitJumpInsn(Opcodes.IFNE, trueLabel);
-                    method.visitJumpInsn(Opcodes.GOTO, falseLabel);
-                }
+            if(opcode == Opcodes.IFEQ){
+                expression1.codeGen(method, clazz, localVars);
+                method.visitJumpInsn(opcode, falseLabel);
+                expression2.codeGen(method, clazz, localVars);
+                method.visitJumpInsn(opcode, falseLabel);
+                method.visitJumpInsn(Opcodes.GOTO, trueLabel);
+            }else {
+                expression1.codeGen(method, clazz, localVars);
+                method.visitJumpInsn(opcode, trueLabel);
+                expression2.codeGen(method, clazz, localVars);
+                method.visitJumpInsn(opcode, trueLabel);
+                method.visitJumpInsn(Opcodes.GOTO, falseLabel);
             }
             Label endLabel = new Label();
             method.visitLabel(trueLabel);
@@ -62,32 +82,60 @@ public class Binary extends Expression {
             method.visitInsn(Opcodes.ICONST_0);
 
             method.visitLabel(endLabel);
+            return;
+        }
+        switch (name) {
+            case "+" -> opcode = Opcodes.IADD;
+            case "-" -> opcode = Opcodes.ISUB;
+            case "*" -> opcode = Opcodes.IMUL;
+            case "/" -> opcode = Opcodes.IDIV;
+            case "%" -> opcode = Opcodes.IREM;
+        }
+        if (opcode != 0) {
+            expression1.codeGen(method, clazz, localVars);
+            expression2.codeGen(method,clazz, localVars);
+            method.visitInsn(opcode);
         }
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        //TODO: there are some more binary operations (==, !=, <, >, <=, >=)
-
         if (
-                expression1.typeCheck(localVars, clazz).equals(expression2.typeCheck(localVars, clazz))
+                expression1.typeCheck(localVars, clazz).equalz(expression2.typeCheck(localVars, clazz))
         ) {
             if (name.equals("+") &&
-                    (expression1.typeCheck(localVars, clazz).equals(Type.INTEGER) ||
-                            expression1.typeCheck(localVars, clazz).equals(Type.STRING))
+                    (expression1.type.equals(Type.INTEGER))
             ) {
-                type = expression1.typeCheck(localVars, clazz);
+                type = expression1.type;
                 return type;
-            } else if ("-*%".contains(name) &&
-                    expression1.typeCheck(localVars, clazz).equals(Type.INTEGER)) {
-                type = expression1.typeCheck(localVars, clazz);
+            } else if ("-*%/".contains(name) &&
+                    expression1.type.equalz(Type.INTEGER)) {
+                type = Type.INTEGER;
                 return type;
             } else if (
                     (name.equals("&&") || name.equals("||")) &&
-                            expression1.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
+                            expression1.type.equals(Type.BOOLEAN)
             ) {
-                type = expression1.typeCheck(localVars, clazz);
-                return type;
+                type = expression1.type;
+                return type;    //bool
+            } else if (name.equals("==") || name.equals("!=")) {
+                if (expression1.type.equalz(expression2.type)) {
+                    type = Type.BOOLEAN;
+                    return type;
+                } else {
+                    throw new TypeMismatchException("Types of Expressions does not match");
+                }
+
+            } else if (name.equals("<") || name.equals(">") || name.equals("<=") || name.equals(">=")) {
+                if (expression1.type.equalz(Type.BOOLEAN) || expression2.type.equalz(Type.BOOLEAN)) {
+                    throw new TypeMismatchException("can not use this binary with boolean");
+                }
+                if (expression1.type.equalz(expression2.type)) {
+                    type = Type.BOOLEAN;
+                    return type;
+                } else {
+                    throw new TypeMismatchException("Types of Expressions does not match");
+                }
             } else {
                 throw new TypeMismatchException("Name does not match or expressions are from wrong Type");
             }

@@ -5,11 +5,13 @@
 
 1. Make sure you use Java JDK version 17 or higher (Theoretically it should work with version 12+ but it's not tested.)
 
-2. Make sure that you're in the root directory of the project
+2. Make sure you have a working `jaooy` installation in the root path and selected its path in the variable in the makefile. 
 
-3. Run `make`. This compiles the program and creates necessary files.
+3. Make sure that you're in the root directory of the project
 
-4. Run `java -cp "asm-9.2.jar:./build" Main < YOUR_FILE_HERE.java` in order to run a custom Java class
+4. Run `make`. This compiles the program and creates necessary files.
+
+5. Run `java -cp "asm-9.2.jar:./build" Main < YOUR_FILE_HERE.java` in order to run a custom Java class
 
 ## Known issues 
 
@@ -19,12 +21,14 @@
 
 ## Contributors
 
-- Bernhard Busse
-- Maik Franke
-- David Schilling
-- Lilly Ferrau
-- Jan-Luca Wolf
-- Philip Rexroth
-- Sean Schwarz
-- Rafael Simon
-- Matthias Fürstenau
+ - Scannen: Lilly Ferreau
+ - Parsen:
+   - Grammatik/Jay-File: Matthias Fürstenau, Sean Schwarz
+   - Abstrakte Syntax (UML): Rafael Simon
+ - Semantische Analyse: Maik Franke, Jan-Luca Wolf
+- Codeerzeugung: Bernhard Busse, David Schilling
+- Tester: Philip Rexroth
+
+## UML diagram
+[Klassendiagramm](https://user-images.githubusercontent.com/95235774/218823205-194647d5-a67d-4379-bcf1-bba9955b7be8.jpg)
+

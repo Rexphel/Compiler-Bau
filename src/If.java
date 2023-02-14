@@ -2,6 +2,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class If extends Statement {
@@ -17,31 +18,32 @@ public class If extends Statement {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-        //we probably want to pass the label to the condition
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         Label elseLabel = new Label();
         Label endLabel = new Label();
-        condition.codeGen(method);
-        //either we want the condition to load a Bool object reference on the stack, or 0/1 as an ICONST - probably the Bool object is better for sake of continuity
+        condition.codeGen(method, clazz, localVars);
         // ifblock
-        //TODO: this has to be tested! Can work like this. Problem: return inside the if-Block, few Labels could be unnecessary then.
-        statement.codeGen(method);
+        method.visitJumpInsn(Opcodes.IFEQ, elseLabel);
+        statement.codeGen(method, clazz, localVars);
         method.visitJumpInsn(Opcodes.GOTO, endLabel);
         // else block
         method.visitLabel(elseLabel);
-        maybeStatement.codeGen(method);
+        if (maybeStatement != null)
+            maybeStatement.codeGen(method, clazz, localVars);
         method.visitLabel(endLabel);
 
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
-                && statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz))) {
-            type = statement.typeCheck(localVars, clazz);
-            return type;
-        } else {
-            throw new TypeMismatchException("If Statement types do not match");
+        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)){
+            if( maybeStatement == null || statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz)))
+            {
+                type = statement.typeCheck(localVars, clazz);
+                return type;
+            }else throw new TypeMismatchException("If Statement types do not match");
+        }else {
+            throw new TypeMismatchException("condition is not a boolean");
         }
     }
 

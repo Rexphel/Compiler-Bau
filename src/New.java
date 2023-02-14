@@ -1,13 +1,12 @@
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.*;
 
 import java.util.List;
 import java.util.Map;
 
 public class New extends StmtExpr {
 
-    //Is this even needed?
     Type type;
-    List<Expression> expressionList;
+    List<Expression> expressionList; //parameter in constructor
 
     public New(Type type, List<Expression> expressionList) {
         this.type = type;
@@ -15,25 +14,20 @@ public class New extends StmtExpr {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
-
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
+        method.visitTypeInsn(Opcodes.NEW, clazz.name.type);
+        method.visitInsn(Opcodes.DUP);
+        method.visitMethodInsn(Opcodes.INVOKESPECIAL, clazz.name.type, "<init>", "()V", false );
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        //TODO: where does the expressionList come from?
-        /*if (super.expression != null && super.statement != null) {
-            throw new RuntimeException("StmtExpr is both a statement and an expression!");
+        if (expressionList.isEmpty()){
+            type = clazz.name;
+            return type;
+        }else{
+            throw new TypeMismatchException("to many arguments");
         }
-
-        if (super.expression == null) {
-            type = Type.VOID;
-            return type;
-        } else {
-            type = super.expression.typeCheck(localVars, clazz);
-            return type;
-        }*/
-        return null;
     }
 
     @Override

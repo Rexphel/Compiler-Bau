@@ -34,10 +34,28 @@ public class Type {
         return switch (type) {
             case "boolean" -> "Z";
             case "int" -> "I";
-            case "String" -> "Ljava/lang/String;"; //this is an Object...
+            case "String" -> "Ljava/lang/String;"; 
             case "char" -> "C";
-            default -> "V";
+            case "void" -> "V";
+            default -> "L"+ type + ";";
         };
+    }
+
+    public boolean isObjectType(){
+        return switch (type){
+            case "boolean", "int", "char", "void" -> false;
+            default -> true;
+        };
+    }
+
+    public boolean equalz(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Type type1 = (Type) o;
+        if (Objects.equals(type, type1.type)){
+            return true;
+        }
+        return ((this.type.equals("int") && type1.type.equals("char")) || (this.type.equals("char") && type1.type.equals("int")));
     }
 
 }

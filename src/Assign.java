@@ -1,12 +1,12 @@
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class Assign extends StmtExpr {
 
-    String varName; // ?TODO: Remove
-    LocalOrFieldVar var; // TODO Make this an expression
+    LocalOrFieldVar var;
     Expression expression;
 
     public Assign(LocalOrFieldVar var, Expression expression) {
@@ -15,35 +15,41 @@ public class Assign extends StmtExpr {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         //either way a PutField on this or a VarInsn(xSTORE)
-        //TODO: we need the localvars and the current Clazz for this.
-
-        if (true /*isLocalVar*/){
-            int localIndex = 1; // TODO: 1 is minimum, 0 is this (get from localvars List)
-            expression.codeGen(method);
-            method.visitVarInsn(Opcodes.ISTORE, localIndex);
-        } else if (true /*isField*/){
+        List<LocalVarDecl> local = localVars.stream().filter(localVarDecl -> localVarDecl.name.equals(var.name)).toList();
+        List<Field> field = clazz.fieldDecl.stream().filter(field1 -> field1.name.equals(var.name)).toList();
+        if (!local.isEmpty()){
+            int localIndex = localVars.indexOf(local.get(0));
+            localVars.indexOf(local.stream().findFirst().get());
+            expression.codeGen(method, clazz, localVars);
+            if (expression.type.isObjectType()){
+                method.visitVarInsn(Opcodes.ASTORE, localIndex);
+            } else {
+                method.visitVarInsn(Opcodes.ISTORE, localIndex);
+            } 
+        } else if (!field.isEmpty()){
             method.visitVarInsn(Opcodes.ALOAD, 0);
-            expression.codeGen(method);
-            method.visitFieldInsn(Opcodes.PUTFIELD, ""/*TODO: classname here*/, varName, expression.type.getTypeLiteral());
+            expression.codeGen(method, clazz, localVars);
+            method.visitFieldInsn(Opcodes.PUTFIELD, clazz.name.type, var.name, expression.type.getTypeLiteral());
         }
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if (localVars.get(varName).equals(expression.typeCheck(localVars, clazz))) {
+        if (var.typeCheck(localVars, clazz).equalz(expression.typeCheck(localVars, clazz))) {
             type = expression.typeCheck(localVars, clazz);
             return type;
         } else {
-            throw new RuntimeException("VarType and expression Type mismatch");
+            throw new TypeMismatchException("VarType and expression Type mismatch");
         }
+
     }
 
     @Override
     public String toString() {
         return "Assign{" +
-                "varName='" + varName + "'" +
+                "varName='" + var.name + "'" +
                 ",\n expression=" + expression + "\n}";
     }
 }

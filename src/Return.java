@@ -1,6 +1,7 @@
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class Return extends Statement {
@@ -19,8 +20,11 @@ public class Return extends Statement {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
 
+        if(expression != null) {
+            expression.codeGen(method, clazz, localVars);
+        }
         int returnCode = switch (type.getTypeLiteral()) {
             case "Z", "C", "I" -> Opcodes.IRETURN;
             case "V" -> Opcodes.RETURN;

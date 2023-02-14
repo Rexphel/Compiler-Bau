@@ -2,6 +2,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
 import java.util.Map;
 
 public class While extends Statement {
@@ -16,15 +17,13 @@ public class While extends Statement {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         Label startLabel = new Label();
         Label endLabel = new Label();
         method.visitLabel(startLabel);
-        expression.codeGen(method);
-        // expression has to load true/false with that we can jump or not by comparing the result to true (we probably want to compare to some ICONST, Booleans are Objects...
-        //InvokeVirtual Boolean "booleanValue" "()Z"
-        method.visitJumpInsn(Opcodes.IFNE,endLabel);
-        statement.codeGen(method);
+        expression.codeGen(method, clazz, localVars);
+        method.visitJumpInsn(Opcodes.IFEQ,endLabel);
+        statement.codeGen(method, clazz, localVars);
         method.visitJumpInsn(Opcodes.GOTO, startLabel);
         method.visitLabel(endLabel);
     }
@@ -35,7 +34,7 @@ public class While extends Statement {
             type = statement.typeCheck(localVars, clazz);
             return type;
         } else {
-            throw new RuntimeException("expression Type does not match boolean");
+            throw new TypeMismatchException("expression Type does not match boolean");
         }
 
     }

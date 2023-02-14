@@ -13,11 +13,10 @@ public class Block extends Statement {
     }
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         for (Statement statement : statements) {
-            statement.codeGen(method);
+            statement.codeGen(method, clazz, localVars);
         }
-
     }
 
     @Override
@@ -30,7 +29,7 @@ public class Block extends Statement {
             }
         });
         if (!types.isEmpty()) {
-            type = types.get(0); //Todo Obermenge von Typen bilden? Prof fragen
+            type = types.get(0);
         } else {
             type = Type.VOID;
         }

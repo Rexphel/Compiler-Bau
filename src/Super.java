@@ -1,21 +1,22 @@
 import org.objectweb.asm.MethodVisitor;
 
+import java.util.List;
 import java.util.Map;
 
 public class Super extends Expression {
 
-    // TODO: hiermit sollte in unserem Fall ausschließlich auf Object zugegriffen werde, da weitere Vererbung nicht implementiert wird.
+    // hiermit sollte in unserem Fall ausschließlich auf Object zugegriffen werde, da weitere Vererbung nicht implementiert wird.
 
     @Override
-    public void codeGen(MethodVisitor method) {
+    public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         //aload java/lang/Object
 
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        type = Type.VOID;
-        return type; //Todo implementieren? kein plan was hier machen
+        type = new Type("Object");
+        return type;
     }
 
     @Override
