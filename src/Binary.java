@@ -20,8 +20,6 @@ public class Binary extends Expression {
 
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
-        // TODO: we can not compare booleans with <,>,>=,<= also calculate Frames (visitFrame)
-
         int opcode = 0 ;
 
         switch(name) {

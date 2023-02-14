@@ -23,7 +23,6 @@ public class Unary extends Expression {
             method.visitInsn(Opcodes.INEG);
         }
         else if (name.equals("!")){
-            // TODO: we have to do something with visitFrame here, because of the jump
             Label endLabel = new Label();
             Label falseLabel = new Label();
             method.visitJumpInsn(Opcodes.IFNE, falseLabel);
@@ -36,7 +35,6 @@ public class Unary extends Expression {
             method.visitLabel(endLabel);
             method.visitFrame(Opcodes.F_SAME, 0, null, 1, new Object[] {Opcodes.INTEGER});
         }
-        //unary operation
     }
 
     @Override
