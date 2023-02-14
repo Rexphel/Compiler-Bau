@@ -35,6 +35,8 @@ ws = [ \t\r\n\b\015]+
 ">=" {System.out.print(yytext()); return new GREATEROREQUAL(yytext());}
 "<" {System.out.print(yytext()); return new LESS(yytext());}
 "<=" {System.out.print(yytext()); return new LESSOREQUAL(yytext());}
+"&&" {System.out.print(yytext()); return new AND(yytext());}
+"||" {System.out.print(yytext()); return new OR(yytext());}
 
 "boolean" {System.out.print(yytext()); return new BOOLEAN(yytext());}
 "int" {System.out.print(yytext() + "INT"); return new INT(yytext());}
