@@ -20,6 +20,7 @@ public class StmtExprStmt extends Statement {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        statementExpression.typeCheck(localVars, clazz);
         type = Type.VOID;
         return type;
     }
