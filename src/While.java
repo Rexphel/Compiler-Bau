@@ -34,7 +34,7 @@ public class While extends Statement {
             type = statement.typeCheck(localVars, clazz);
             return type;
         } else {
-            throw new RuntimeException("expression Type does not match boolean");
+            throw new TypeMismatchException("expression Type does not match boolean");
         }
 
     }

@@ -3,10 +3,6 @@ import org.objectweb.asm.Opcodes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class LocalOrFieldVar extends Expression {
 
@@ -40,7 +36,7 @@ public class LocalOrFieldVar extends Expression {
         if (type == null) {
             List<Field> fieldVars = clazz.fieldDecl.stream().filter(item -> item.name.equals(name)).toList();
             if (fieldVars.isEmpty()) {
-                throw new RuntimeException("Fieldvar is not found");
+                throw new TypeMismatchException("Fieldvar is not found");
             } else {
                 //Typ von ersten gefundenen Variablen
                 return type = fieldVars.stream().findFirst().get().type;

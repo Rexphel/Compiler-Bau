@@ -34,6 +34,10 @@ public class MethodCall extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        if(!(objectExpr instanceof This || objectExpr.typeCheck(localVars, clazz).equals(clazz.name))){
+            throw new TypeMismatchException("objectExpr does not math This or the Type of the class");
+        }
+
         List<Method> methods = clazz.methodDecl.stream()
                 .filter(method -> method.name
                         .equals(methodName)).toList();
@@ -56,20 +60,20 @@ public class MethodCall extends StmtExpr {
                     // add the method after we checked all parameters
                     if (j + 1 == methodz.parameters.size()) {
                         foundMethod.add(methodz);
-                    } 
+                    }
                 }
             }
         }
         //check if we found a method
         if (foundMethod.isEmpty()) {
-            throw new TypeMismatchException("no mathode with this name and parameters");
+            throw new TypeMismatchException("no methode with this name and parameters");
         } else return foundMethod.get(0).type;
 
         /*clazz.methodDecl.stream()
                 .filter(method -> method.name.equals(methodName))
                 .map(method -> method.type)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No Method found to call!"));*/
+                .orElseThrow(() -> new TypeMismatchException("No Method found to call!"));*/
     }
 
     @Override

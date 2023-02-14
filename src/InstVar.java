@@ -29,6 +29,9 @@ public class InstVar extends Expression {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
+        if(!(expression instanceof This || expression.typeCheck(localVars, clazz).equals(clazz.name))){
+            throw new TypeMismatchException("objectExpr does not math This or the Type of the class");
+        }
         List<Field> fields = clazz.fieldDecl;
         List<Field> namedField = fields.stream().filter(field -> field.name.equals(name)).toList();
         boolean isNameFound = !namedField.isEmpty();
@@ -36,7 +39,7 @@ public class InstVar extends Expression {
             type = namedField.get(0).type;
             return type;
         } else {
-            throw new RuntimeException("Field " + name + " not found.");
+            throw new TypeMismatchException("Field " + name + " not found.");
         }
     }
 

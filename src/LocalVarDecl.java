@@ -36,7 +36,7 @@ public class LocalVarDecl extends Statement {
             localVars.put(name, type);
             return Type.VOID;   
         } else {
-            throw new RuntimeException("initial Value does not equal type");
+            throw new TypeMismatchException("initial Value does not equal type");
         }
     }
 
