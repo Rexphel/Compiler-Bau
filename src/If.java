@@ -28,7 +28,8 @@ public class If extends Statement {
         method.visitJumpInsn(Opcodes.GOTO, endLabel);
         // else block
         method.visitLabel(elseLabel);
-        maybeStatement.codeGen(method, clazz, localVars);
+        if (maybeStatement != null)
+            maybeStatement.codeGen(method, clazz, localVars);
         method.visitLabel(endLabel);
 
     }
@@ -36,7 +37,7 @@ public class If extends Statement {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)){
-            if(statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz)) || maybeStatement == null)
+            if( maybeStatement == null || statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz)))
             {
                 type = statement.typeCheck(localVars, clazz);
                 return type;

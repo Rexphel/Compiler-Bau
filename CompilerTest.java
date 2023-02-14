@@ -29,6 +29,12 @@ class  CompilerTest {
 		return new  CompilerTest();
 	}
 
+	String getStr(){
+		CompilerTest cT = new CompilerTest();
+		String string = cT.str;
+		return string;
+	}
+
 	String getLongString(){
 		String str = "It is a period of civil war. Rebel spaceships, striking from a hidden base, have won their first victory against the evil Galactic Empire.  During the battle, Rebel spies managed to steal secret plans to the Empire's ultimate weapon, the DEATH STAR, an armored space station with enough power to destroy an entire planet  Pursued by the Empire's sinister agents, Princess Leia races home aboard her starship, custodian of the stolen plans that can save her people and restore freedom to the galaxy....";
 		return str;
@@ -99,8 +105,8 @@ class  CompilerTest {
 	}
 
 	boolean notnot(boolean f){
-		 CompilerTest t = new  CompilerTest();
-		boolean not = t.not(f);
+		CompilerTest t = new CompilerTest();
+		boolean not = t.not( f );
 		return !not;
 	}
 

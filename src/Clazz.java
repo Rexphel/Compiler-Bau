@@ -16,7 +16,7 @@ public class Clazz {
     List<Method> methodDecl;
 
 
-    public Clazz(String statement, Type name, List<Field> fieldDecl, List<Method> methodDecl) {
+    public Clazz(Type name, List<Field> fieldDecl, List<Method> methodDecl) {
         this.name = name;
         this.fieldDecl = fieldDecl;
         this.methodDecl = methodDecl;
@@ -62,12 +62,9 @@ public class Clazz {
         for(Method m : methodDecl) {
             m.codeGen(cw, this);
         }
-
-
         cw.visitEnd();
 
         return cw.toByteArray();
-
     }
 
     public Type typeCheck() {

@@ -6,7 +6,6 @@ import java.util.Map;
 public class StmtExprStmt extends Statement {
 
     StmtExpr statementExpression;
-    Type type;
 
     public StmtExprStmt(StmtExpr StatementExpression) {
         this.statementExpression = StatementExpression;

@@ -23,7 +23,8 @@ public class New extends StmtExpr {
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         if (expressionList.isEmpty()){
-            return clazz.name;
+            type = clazz.name;
+            return type;
         }else{
             throw new TypeMismatchException("to many arguments");
         }

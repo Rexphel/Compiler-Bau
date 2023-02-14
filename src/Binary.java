@@ -95,7 +95,6 @@ public class Binary extends Expression {
             expression1.codeGen(method, clazz, localVars);
             expression2.codeGen(method,clazz, localVars);
             method.visitInsn(opcode);
-            return;
         }
     }
 
@@ -111,7 +110,8 @@ public class Binary extends Expression {
                 return type;
             } else if ("-*%/".contains(name) &&
                     expression1.type.equalz(Type.INTEGER)) {
-                return Type.INTEGER;
+                type = Type.INTEGER;
+                return type;
             } else if (
                     (name.equals("&&") || name.equals("||")) &&
                             expression1.type.equals(Type.BOOLEAN)
@@ -120,7 +120,8 @@ public class Binary extends Expression {
                 return type;    //bool
             } else if (name.equals("==") || name.equals("!=")) {
                 if (expression1.type.equalz(expression2.type)) {
-                    return Type.BOOLEAN;
+                    type = Type.BOOLEAN;
+                    return type;
                 } else {
                     throw new TypeMismatchException("Types of Expressions does not match");
                 }
@@ -130,7 +131,8 @@ public class Binary extends Expression {
                     throw new TypeMismatchException("can not use this binary with boolean");
                 }
                 if (expression1.type.equalz(expression2.type)) {
-                    return Type.BOOLEAN;
+                    type = Type.BOOLEAN;
+                    return type;
                 } else {
                     throw new TypeMismatchException("Types of Expressions does not match");
                 }

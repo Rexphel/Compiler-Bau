@@ -18,13 +18,14 @@ public class InstVar extends Expression {
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {
         if (expression instanceof This){
-            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, null); // TODO descriptor
-        } else if (expression instanceof Super) {
-            // TODO
-        }else {
-            // we do not want to handle any other expression!
+            List<Field> fields = clazz.fieldDecl.stream().filter(field -> field.name.equals(name)).toList();
+            method.visitVarInsn(Opcodes.ALOAD, 0);
+            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, fields.get(0).type.getTypeLiteral());
+        } else if (expression instanceof LocalOrFieldVar){
+            List<Field> fields = clazz.fieldDecl.stream().filter(field -> field.name.equals(name)).toList();
+            expression.codeGen(method, clazz, localVars);
+            method.visitFieldInsn(Opcodes.GETFIELD, clazz.name.type, name, fields.get(0).type.getTypeLiteral());
         }
-
     }
 
     @Override

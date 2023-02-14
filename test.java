@@ -11,7 +11,7 @@ class test {
 		String f = "42";
 		char x = '2';
 		char y = '4';
-		int i = b;
+		int i = b - 5;
 		return x - y;
 	}
 	

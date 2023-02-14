@@ -62,18 +62,15 @@ public class MethodCall extends StmtExpr {
                         foundMethod.add(methodz);
                     }
                 }
+                if(parameterList.size() == 0){
+                    foundMethod.add(methodz);
+                }
             }
         }
         //check if we found a method
         if (foundMethod.isEmpty()) {
             throw new TypeMismatchException("no methode with this name and parameters");
         } else return foundMethod.get(0).type;
-
-        /*clazz.methodDecl.stream()
-                .filter(method -> method.name.equals(methodName))
-                .map(method -> method.type)
-                .findFirst()
-                .orElseThrow(() -> new TypeMismatchException("No Method found to call!"));*/
     }
 
     @Override

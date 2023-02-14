@@ -34,7 +34,8 @@ public class LocalVarDecl extends Statement {
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
         if ((initialValue == null || initialValue.typeCheck(localVars, clazz).equals(type))) {
             localVars.put(name, type);
-            return Type.VOID;   
+            super.type = Type.VOID;
+            return super.type;
         } else {
             throw new TypeMismatchException("initial Value does not equal type");
         }

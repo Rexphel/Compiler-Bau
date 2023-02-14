@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Super extends Expression {
 
-    // TODO: hiermit sollte in unserem Fall ausschließlich auf Object zugegriffen werde, da weitere Vererbung nicht implementiert wird.
+    // hiermit sollte in unserem Fall ausschließlich auf Object zugegriffen werde, da weitere Vererbung nicht implementiert wird.
 
     @Override
     public void codeGen(MethodVisitor method, Clazz clazz, List<LocalVarDecl> localVars) {

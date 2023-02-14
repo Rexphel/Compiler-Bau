@@ -23,7 +23,6 @@ public class Field implements TypedParserObject {
 
     public void generateInit(MethodVisitor constructor, Clazz clazz, List<LocalVarDecl> noLocalVars){
         if(initialValue != null){
-            System.out.println("initiating var name with :" + initialValue);
             constructor.visitVarInsn(Opcodes.ALOAD, 0);
             initialValue.codeGen(constructor, clazz, noLocalVars);
             constructor.visitFieldInsn(Opcodes.PUTFIELD, clazz.name.type, name, type.getTypeLiteral());

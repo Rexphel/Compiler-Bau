@@ -18,7 +18,6 @@ public class Method implements TypedParserObject {
 
 
     public void codeGen(ClassWriter cw, Clazz clazz) {
-        System.out.println("codegen - method " + name);
         MethodVisitor method = cw.visitMethod(
             Opcodes.ACC_PUBLIC, 
             name,
@@ -31,6 +30,10 @@ public class Method implements TypedParserObject {
 
         method.visitCode();
         block.codeGen(method, clazz, localVars);
+
+        if (type.equals(Type.VOID)){
+            method.visitInsn(Opcodes.RETURN);
+        }
         method.visitMaxs(0, 0);
         method.visitEnd();
     }
