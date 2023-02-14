@@ -26,10 +26,12 @@ public class Unary extends Expression {
             // TODO: we have to do something with visitFrame here, because of the jump
             Label endLabel = new Label();
             Label falseLabel = new Label();
-            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             method.visitJumpInsn(Opcodes.IFNE, falseLabel);
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             method.visitInsn(Opcodes.ICONST_1);
+            method.visitJumpInsn(Opcodes.GOTO, endLabel);
             method.visitLabel(falseLabel);
+            method.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
             method.visitInsn(Opcodes.ICONST_0);
             method.visitLabel(endLabel);
             method.visitFrame(Opcodes.F_SAME, 0, null, 1, new Object[] {Opcodes.INTEGER});

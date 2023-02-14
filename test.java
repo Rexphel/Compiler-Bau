@@ -7,7 +7,7 @@ class test {
 	}
 	
 	int meth2 (boolean a, int b) {
-		boolean r = false;
+		boolean r = !a;
 		int i = b;
 		while ( r != true){
 			r = true;
