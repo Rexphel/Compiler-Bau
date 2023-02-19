@@ -1,5 +1,5 @@
 jaooyExe = ./jaooy.linux-gnu
-file = CompilerTest.java
+file = TestSuite
 
 ./build/Main.class: ./build/Scanner.class
 	cp Main.java ./build; cd ./build; javac -cp "../asm-9.2.jar:." Main.java
@@ -37,10 +37,10 @@ clean:
 	rm ./build/* javafiles.txt
 
 runTest:
-	javac CompilerTestTest.java
-	java -cp "asm-9.2.jar:./build" Main < ${file}
+	java -cp "asm-9.2.jar:./build" Main < ${file}.java
 	echo ------------------
-	java CompilerTestTest
-
-
+	jar uf junit-platform-console-standalone-1.9.2.jar ${file}.class
+	javac -cp junit-platform-console-standalone-1.9.2.jar CompilerTest.java
+	echo ------------------
+	java -jar junit-platform-console-standalone-1.9.2.jar -cp . -c CompilerTest
 

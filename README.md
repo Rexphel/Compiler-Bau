@@ -13,6 +13,13 @@
 
 5. Run `java -cp "asm-9.2.jar:./build" Main < YOUR_FILE_HERE.java` in order to run a custom Java class
 
+
+### Testing
+
+1. Ensure 1. to 3. above
+
+2. Run `make runTest`. This automatically compiles the TestSuite our Compiler and prepares and runs the JUnit TestSuite
+
 ## Known issues 
 
 1. If you get an error from jaooy that either it is not a command or not permitted to execute, you may be running the wrong jaooy executable. Make sure you have the right jaooy defined in the Makefile. We also experienced that downloading the jaooy from git somehow destructs the executable, causing the mentioned error. To fix that, you may want to add your own jaooy build from the given source code or use the working jaooy from the remote computer.

@@ -29,7 +29,6 @@ hs_err_pid*
 
 # Ide Files
 .idea/
-/Compiler-Test/target/
 
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains+iml
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains+iml
