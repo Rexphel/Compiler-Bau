@@ -22,17 +22,22 @@ public class LocalVarDecl extends Statement {
         if (initialValue != null){
             int localIndex = localVars.size() -1;
             initialValue.codeGen(method, clazz, localVars);
-            method.visitVarInsn(Opcodes.ISTORE, localIndex); // TODO: we have more than Integer, what about Strings? -ASTORE
+            if(initialValue.type.isObjectType()){
+                method.visitVarInsn(Opcodes.ASTORE, localIndex);
+            }else {
+                method.visitVarInsn(Opcodes.ISTORE, localIndex);
+            } 
         }
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if ((initialValue.typeCheck(localVars, clazz).equals(type)) || initialValue == null) {
+        if ((initialValue == null || initialValue.typeCheck(localVars, clazz).equals(type))) {
             localVars.put(name, type);
-            return Type.VOID; //TODO: watch out! Don't know if VOID is realy true here (before : type)
+            super.type = Type.VOID;
+            return super.type;
         } else {
-            throw new RuntimeException("initial Value does not equal type");
+            throw new TypeMismatchException("initial Value does not equal type");
         }
     }
 
@@ -41,6 +46,7 @@ public class LocalVarDecl extends Statement {
         return "LocalVarDecl{" +
                 "type=" + type +
                 ",\n name='" + name + '\'' +
+                ",\n initialvalue='" + initialValue + '\'' +
                 "\n}";
     }
 }

@@ -23,7 +23,6 @@ public class Field implements TypedParserObject {
 
     public void generateInit(MethodVisitor constructor, Clazz clazz, List<LocalVarDecl> noLocalVars){
         if(initialValue != null){
-            System.out.println("initiating var name with :" + initialValue);
             constructor.visitVarInsn(Opcodes.ALOAD, 0);
             initialValue.codeGen(constructor, clazz, noLocalVars);
             constructor.visitFieldInsn(Opcodes.PUTFIELD, clazz.name.type, name, type.getTypeLiteral());
@@ -40,12 +39,12 @@ public class Field implements TypedParserObject {
             }
         }
         if (b) {
-            throw new RuntimeException("Field already exists");
+            throw new TypeMismatchException("Field already exists");
         }
         if (initialValue == null ||  initialValue.typeCheck(localVars, clazz).equals(type) ) {
             return type;
         } else {
-            throw new RuntimeException("Initial value does not equal type");
+            throw new TypeMismatchException("Initial value does not equal type");
         }
     }
 

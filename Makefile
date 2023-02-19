@@ -1,5 +1,5 @@
 jaooyExe = ./jaooy.linux-gnu
-file = test.java
+file = CompilerTest.java
 
 ./build/Main.class: ./build/Scanner.class
 	cp Main.java ./build; cd ./build; javac -cp "../asm-9.2.jar:." Main.java
@@ -36,9 +36,11 @@ rebuild:
 clean:
 	rm ./build/* javafiles.txt
 
-compileTest: ./build/Main.class
-	java -cp "asm-9.2.jar:./build" Main < ${file}
-
 runTest:
+	javac CompilerTestTest.java
 	java -cp "asm-9.2.jar:./build" Main < ${file}
+	echo ------------------
+	java CompilerTestTest
+
+
 

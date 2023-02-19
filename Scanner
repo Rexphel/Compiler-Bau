@@ -15,7 +15,7 @@ ws = [ \t\r\n\b\015]+
 
 "(" {System.out.print(yytext()); return new LBRACKET(yytext());}
 ")" {System.out.print(yytext()); return new RBRACKET(yytext());}
-"{" {System.out.print(yytext() + "LBRACE"); return new LBRACE(yytext());}
+"{" {System.out.print(yytext()); return new LBRACE(yytext());}
 "}" {System.out.print(yytext()); return new RBRACE(yytext());}
 "," {System.out.print(yytext()); return new COMMA(yytext());}
 ";" {System.out.print(yytext()); return new SEMICOLON(yytext());}
@@ -25,6 +25,7 @@ ws = [ \t\r\n\b\015]+
 "-" {System.out.print(yytext()); return new MINUS(yytext());}
 "*" {System.out.print(yytext()); return new MULTIPLY(yytext());}
 "/" {System.out.print(yytext()); return new DIVIDE(yytext());}
+"%" {System.out.print(yytext()); return new MODULO(yytext());}
 
 "=" {System.out.print(yytext()); return new JASSIGN(yytext());}
 "!" {System.out.print(yytext()); return new NOT(yytext());}
@@ -34,15 +35,17 @@ ws = [ \t\r\n\b\015]+
 ">=" {System.out.print(yytext()); return new GREATEROREQUAL(yytext());}
 "<" {System.out.print(yytext()); return new LESS(yytext());}
 "<=" {System.out.print(yytext()); return new LESSOREQUAL(yytext());}
+"&&" {System.out.print(yytext()); return new AND(yytext());}
+"||" {System.out.print(yytext()); return new OR(yytext());}
 
 "boolean" {System.out.print(yytext()); return new BOOLEAN(yytext());}
-"int" {System.out.print(yytext() + "INT"); return new INT(yytext());}
+"int" {System.out.print(yytext()); return new INT(yytext());}
 "char" {System.out.print(yytext()); return new CHAR(yytext());}
 "String" {System.out.print(yytext()); return new STRING(yytext());}
 
 "null" {System.out.print(yytext()); return new NULLLITERAL(yytext());}
 true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
-[1-9][0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
+[0-9]*[I]? {System.out.print(yytext()); return new INTLITERAL(yytext());}
 \".*\" {System.out.print(yytext()); return new STRINGLITERAL(yytext());}
 \'.\' {System.out.print(yytext()); return new CHARLITERAL(yytext());}
 
@@ -51,13 +54,14 @@ true|false {System.out.print(yytext()); return new BOOLLITERAL(yytext());}
 "super" {System.out.print(yytext()); return new JSUPER(yytext());}
 "this" {System.out.print(yytext()); return new JTHIS(yytext());}
 "void" {System.out.print(yytext()); return new VOID(yytext());}
-"return" {System.out.print(yytext()+"RETURN"); return new JRETURN(yytext());}
+"return" {System.out.print(yytext()); return new JRETURN(yytext());}
 
 if {System.out.print(yytext()); return new JIF(yytext());}
 else {System.out.print(yytext()); return new ELSE(yytext());}
 while {System.out.print(yytext()); return new JWHILE(yytext());}
 
-[a-zA-Z_][0-9a-zA-Z_]* {System.out.print("IDENTIFIER: " + yytext()); return new IDENTIFIER(yytext());}
+[A-Z][0-9a-zA-Z_]* {System.out.print(yytext()); return new CLASSNAME(yytext());}
+[a-zA-Z_][0-9a-zA-Z_]* {System.out.print(yytext() ); return new IDENTIFIER(yytext());}
 
 {ws} {System.out.print(yytext());}
-.  { System.out.println("Why are we here: " + yytext() + "?"); }
+.  { System.out.println(yytext()); }

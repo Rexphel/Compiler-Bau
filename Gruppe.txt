@@ -1,5 +1,0 @@
-Scanner: Lilly
-Parser: Grammatik: Sean, Rafael, Matthias
-Sematik: Jan-Luca, Maik
-CodeGenerierung: David, Bernhard
-Tester: Philip

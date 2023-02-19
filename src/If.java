@@ -23,25 +23,27 @@ public class If extends Statement {
         Label endLabel = new Label();
         condition.codeGen(method, clazz, localVars);
         // ifblock
-        // TODO: this has to be tested! Can work like this. Problem: return inside the if-Block, few Labels could be unnecessary then.
         method.visitJumpInsn(Opcodes.IFEQ, elseLabel);
         statement.codeGen(method, clazz, localVars);
         method.visitJumpInsn(Opcodes.GOTO, endLabel);
         // else block
         method.visitLabel(elseLabel);
-        maybeStatement.codeGen(method, clazz, localVars);
+        if (maybeStatement != null)
+            maybeStatement.codeGen(method, clazz, localVars);
         method.visitLabel(endLabel);
 
     }
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)
-                && statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz))) {
-            type = statement.typeCheck(localVars, clazz);
-            return type;
-        } else {
-            throw new TypeMismatchException("If Statement types do not match");
+        if (condition.typeCheck(localVars, clazz).equals(Type.BOOLEAN)){
+            if( maybeStatement == null || statement.typeCheck(localVars, clazz).equals(maybeStatement.typeCheck(localVars, clazz)))
+            {
+                type = statement.typeCheck(localVars, clazz);
+                return type;
+            }else throw new TypeMismatchException("If Statement types do not match");
+        }else {
+            throw new TypeMismatchException("condition is not a boolean");
         }
     }
 

@@ -20,10 +20,14 @@ public class Assign extends StmtExpr {
         List<LocalVarDecl> local = localVars.stream().filter(localVarDecl -> localVarDecl.name.equals(var.name)).toList();
         List<Field> field = clazz.fieldDecl.stream().filter(field1 -> field1.name.equals(var.name)).toList();
         if (!local.isEmpty()){
-            int localIndex = 1;
+            int localIndex = localVars.indexOf(local.get(0));
             localVars.indexOf(local.stream().findFirst().get());
             expression.codeGen(method, clazz, localVars);
-            method.visitVarInsn(Opcodes.ISTORE, localIndex); //TODO: this could also be ASTORE
+            if (expression.type.isObjectType()){
+                method.visitVarInsn(Opcodes.ASTORE, localIndex);
+            } else {
+                method.visitVarInsn(Opcodes.ISTORE, localIndex);
+            } 
         } else if (!field.isEmpty()){
             method.visitVarInsn(Opcodes.ALOAD, 0);
             expression.codeGen(method, clazz, localVars);
@@ -33,12 +37,13 @@ public class Assign extends StmtExpr {
 
     @Override
     public Type typeCheck(Map<String, Type> localVars, Clazz clazz) {
-        if (var.typeCheck(localVars, clazz).equals(expression.typeCheck(localVars, clazz))) {
+        if (var.typeCheck(localVars, clazz).equalz(expression.typeCheck(localVars, clazz))) {
             type = expression.typeCheck(localVars, clazz);
             return type;
         } else {
-            throw new RuntimeException("VarType and expression Type mismatch");
+            throw new TypeMismatchException("VarType and expression Type mismatch");
         }
+
     }
 
     @Override

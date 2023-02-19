@@ -22,7 +22,7 @@ public class While extends Statement {
         Label endLabel = new Label();
         method.visitLabel(startLabel);
         expression.codeGen(method, clazz, localVars);
-        method.visitJumpInsn(Opcodes.IFNE,endLabel);
+        method.visitJumpInsn(Opcodes.IFEQ,endLabel);
         statement.codeGen(method, clazz, localVars);
         method.visitJumpInsn(Opcodes.GOTO, startLabel);
         method.visitLabel(endLabel);
@@ -34,7 +34,7 @@ public class While extends Statement {
             type = statement.typeCheck(localVars, clazz);
             return type;
         } else {
-            throw new RuntimeException("expression Type does not match boolean");
+            throw new TypeMismatchException("expression Type does not match boolean");
         }
 
     }

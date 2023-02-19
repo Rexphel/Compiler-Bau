@@ -11,8 +11,8 @@ class Main {
 
         try {
             Clazz clazz = (Clazz) parser.yyparse(scanner);
-            System.out.println(clazz.toString());
             clazz.typeCheck();
+            System.out.println(clazz.toString());
             byte[] bytecode = clazz.codeGen();
             writeClassfile(bytecode);
         } catch (Exception e) {

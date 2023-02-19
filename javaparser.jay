@@ -14,7 +14,10 @@
 %token PLUS 
 %token MINUS 
 %token MULTIPLY 
-%token DIVIDE 
+%token DIVIDE
+%token MODULO
+%token AND
+%token OR
 %token JASSIGN
 %token EQUALS
 %token NOTEQUAL 
@@ -44,8 +47,9 @@
 %token IDENTIFIER
 %token DOT 
 %token COMMA
+%token CLASSNAME
 
-%type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL
+%type <String> CHARLITERAL INTLITERAL BOOLLITERAL VOID BOOLEAN INT CHAR STRING STRINGLITERAL Binaryoperator Unaryoperator NOT PLUS MINUS MULTIPLY DIVIDE MODULO AND OR IDENTIFIER EQUALS NOTEQUAL GREATER GREATEROREQUAL LESS LESSOREQUAL CLASSNAME
 
 %type <Statement> Statement
 %type <If> Ifthenstatement Ifthenelsestatement
@@ -76,8 +80,8 @@
 %type <List> Statements Expressions Parameters
 %%
 
-Class               : CLASS IDENTIFIER LBRACE RBRACE { $$ = new Clazz("", new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
-                    | CLASS IDENTIFIER LBRACE FieldsAndMethods RBRACE { $$ = new Clazz("", new Type($2), $4.fieldDecl, $4.methodDecl); }
+Class               : CLASS CLASSNAME LBRACE RBRACE { $$ = new Clazz(new Type($2), new ArrayList<Field>(), new ArrayList<Method>()); }
+                    | CLASS CLASSNAME LBRACE FieldsAndMethods RBRACE { $$ = new Clazz(new Type($2), $4.fieldDecl, $4.methodDecl); }
 
 Block               : LBRACE RBRACE{ $$ = new Block(new ArrayList<Statement>());}
                     | LBRACE Statements  RBRACE { $$ = new Block($2); }
@@ -93,6 +97,7 @@ Statement           : Ifthenstatement {$$ = $1;}
 
 Expression          : JSUPER {$$ = new Super();}
 					| Localorfieldvar {$$ = $1;}
+					| Stmtexprexpr {$$ = $1;}
 					| InstVar {$$ = $1;}
 					| JUnary {$$ = $1;}
 					| JBinary {$$ = $1;}
@@ -104,7 +109,6 @@ Expression          : JSUPER {$$ = new Super();}
 					| STRINGLITERAL {$$ = new JString($1);}
 					| NULLLITERAL {$$ = new JNull();}
 					| JTHIS {$$ = new This();}
-					| Stmtexprexpr {$$ = $1;}
 
 Emptystatement		: SEMICOLON { $$ = null;}
 
@@ -115,6 +119,7 @@ Stmtexpr			: assign {$$ = $1;}
 Localorfieldvar		: IDENTIFIER {$$ = new LocalOrFieldVar($1);}
 
 InstVar				: Localorfieldvar DOT IDENTIFIER {$$ = new InstVar($1, $3);}
+                    | JTHIS DOT IDENTIFIER {$$ = new InstVar(new This(), $3);}
 
 JUnary				: Unaryoperator Expression {$$ = new Unary($1, $2);}
 
@@ -128,6 +133,9 @@ Binaryoperator		: PLUS {$$ = $1;}
 					| MINUS {$$ = $1;}
 					| MULTIPLY {$$ = $1;}
 					| DIVIDE {$$ = $1;}
+					| MODULO {$$ = $1;}
+					| AND {$$ = $1;}
+					| OR {$$ = $1;}
 					| EQUALS {$$ = $1;}
 					| NOTEQUAL {$$ = $1;}
 					| GREATER {$$ = $1;}
@@ -144,15 +152,17 @@ assign              : Localorfieldvar JASSIGN Expression { $$ = new Assign($1, $
 New					: JNEW Type LBRACKET Expressions RBRACKET { $$ = new New($2, $4); }
 					| JNEW Type LBRACKET RBRACKET { $$ = new New($2, new ArrayList<>()); }
 
-Expressions			: Expression {
-						$$ = new ArrayList<Expression>(Arrays.asList($1));
-					}
-					| Expressions COMMA Expression {
+Expressions			: Expressions COMMA Expression {
 						$1.add($3); 
 						$$ = $1;
 					}
+					| Expression {
+                        $$ = new ArrayList<Expression>(Arrays.asList($1));
+                    }
+                    | { $$ = new ArrayList<>();}
 
-Methodcall			: Expression DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall($1, $3, $5);}
+Methodcall			: JTHIS DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall(new This(), $3, $5);}
+                    | Localorfieldvar DOT IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall($1, $3, $5);}
 					| IDENTIFIER LBRACKET Expressions RBRACKET {$$ = new MethodCall(new This(), $1, $3);}
                     
 Statements          : Statement {
@@ -202,7 +212,7 @@ Method              : Type IDENTIFIER LBRACKET RBRACKET Block {
 FieldsAndMethods    : FieldsAndMethods Field {
 						$1.fieldDecl.add($2);
 						$$ = new Clazz(
-							"", new Type(""), 
+							new Type(""),
 							$1.fieldDecl,
 							$1.methodDecl
 						);
@@ -210,16 +220,16 @@ FieldsAndMethods    : FieldsAndMethods Field {
                     | FieldsAndMethods Method { 
 						$1.methodDecl.add($2);
 						$$ = new Clazz(
-							"", new Type(""), 
+							new Type(""),
 							$1.fieldDecl ,
 							$1.methodDecl
 						);
 					}
                     | Field { 
-						$$ = new Clazz("", new Type(""), new ArrayList<Field>(Arrays.asList($1)), new ArrayList<Method>());
+						$$ = new Clazz(new Type(""), new ArrayList<Field>(Arrays.asList($1)), new ArrayList<Method>());
 					}
                     | Method { 
-						$$ = new Clazz("", new Type(""), new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList($1)));
+						$$ = new Clazz(new Type(""), new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList($1)));
 					}
 
 Type				: VOID { $$ = new Type($1); }
@@ -227,5 +237,6 @@ Type				: VOID { $$ = new Type($1); }
 					| CHAR { $$ = new Type($1); }
 					| STRING { $$ = new Type($1); }
 					| INT { $$ = new Type($1); }
+					| CLASSNAME {$$ = new Type($1);}
 %%
 }

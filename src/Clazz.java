@@ -16,14 +16,13 @@ public class Clazz {
     List<Method> methodDecl;
 
 
-    public Clazz(String statement, Type name, List<Field> fieldDecl, List<Method> methodDecl) {
+    public Clazz(Type name, List<Field> fieldDecl, List<Method> methodDecl) {
         this.name = name;
         this.fieldDecl = fieldDecl;
         this.methodDecl = methodDecl;
     }
 
     public byte[] codeGen() {
-        //we probably want to instantiate the cw in the Main class
         ClassWriter cw = new ClassWriter( ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         cw. visit(
                 Opcodes.V1_8,
@@ -34,7 +33,6 @@ public class Clazz {
                 null);
 
         for (Field f : fieldDecl){
-            // cw.visitField(...);
             f.codeGen(cw);
         }
 
@@ -56,7 +54,6 @@ public class Clazz {
             field.generateInit(constructor, this, nolocalVars);
         }
 
-        // wenn in FieldDecl statt nur field auch assign stehen kann müssen hier im Konstructor die Initialwerte geladen werden
         constructor.visitInsn(Opcodes.RETURN);
         constructor.visitMaxs(0,0);
         constructor.visitEnd();
@@ -65,12 +62,9 @@ public class Clazz {
         for(Method m : methodDecl) {
             m.codeGen(cw, this);
         }
-
-
         cw.visitEnd();
 
         return cw.toByteArray();
-
     }
 
     public Type typeCheck() {
