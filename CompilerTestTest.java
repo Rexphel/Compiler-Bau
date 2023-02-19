@@ -7,6 +7,7 @@ public class CompilerTestTest {
         System.out.println("Here is a char: " + cT.getC());
         System.out.println("The negation of field f is: "+ cT.getNotF());
         System.out.println("The String of the class is: "+ cT.getStr());
+        System.out.println("Here is an object field of value: "+  cT.getTest());
         cT = cT.getNew();
         System.out.println("i after a reset is: " + cT.getI());
         System.out.println("the volume of a cuboid (h:3, w:4, l:5) is:" + cT.calculateVolumeOfCuboid(3, 4, 5));
