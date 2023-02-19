@@ -4,6 +4,8 @@ class  CompilerTest {
 	char c = 'x';
 	String str = "this is a string";
 
+	CompilerTest test = null;
+
 	int getI(){
 		return i;
 	}
@@ -14,6 +16,10 @@ class  CompilerTest {
 
 	void incrementI(){
 		i = i +1;
+	}
+
+	CompilerTest getTest(){
+		return test;
 	}
 
 	boolean getNotF(){
@@ -59,7 +65,6 @@ class  CompilerTest {
 			x = x + count;
 			count = count + 1;
 		}
-
 		if (count != 4){
 			return b / c;
 		} else {
@@ -105,6 +110,7 @@ class  CompilerTest {
 	}
 
 	boolean notnot(boolean f){
+		CompilerTest g = null;
 		CompilerTest t = new CompilerTest();
 		boolean not = t.not( f );
 		return !not;

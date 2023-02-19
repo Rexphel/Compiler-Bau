@@ -41,7 +41,7 @@ public class Field implements TypedParserObject {
         if (b) {
             throw new TypeMismatchException("Field already exists");
         }
-        if (initialValue == null ||  initialValue.typeCheck(localVars, clazz).equals(type) ) {
+        if (initialValue == null ||  initialValue.typeCheck(localVars, clazz).equals(type) || (type.isObjectType() && initialValue instanceof JNull) ) {
             return type;
         } else {
             throw new TypeMismatchException("Initial value does not equal type");
